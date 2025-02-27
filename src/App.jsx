@@ -1,0 +1,230 @@
+import { useState, useEffect, createContext } from 'react'
+import { v4 as uuidv4 } from 'uuid'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import demoData from './data.json'
+import Header from './components/Header'
+import Sidebar from './components/Sidebar'
+import SidebarMini from './components/SidebarMini.jsx'
+import Main from './components/Main'
+
+function addIdsToData(boards) {
+  return boards.map(board => ({
+    ...board,
+    id: uuidv4(),
+    columns: board.columns.map(column => ({
+      ...column,
+      id: uuidv4(),
+      tasks: column.tasks.map(task => ({
+        ...task,
+        id: uuidv4(),
+        subtasks: task.subtasks.map(subtask => ({
+          ...subtask,
+          id: uuidv4(),
+        })),
+      })),
+    })),
+  }))
+}
+
+export const BoardContext = createContext()
+
+function App() {
+  const [darkMode, setDarkMode] = useState(false)
+  const [boards, setBoards] = useState(addIdsToData(demoData.boards))
+  const [currentBoard, setCurrentBoard] = useState(boards[0])
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [activeTaskId, setActiveTaskId] = useState(null)
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
+  const contextValue = {
+    darkMode,
+    boards,
+    currentBoard,
+    sidebarOpen,
+    activeTaskId,
+    isTaskModalOpen,
+    setCurrentBoard,
+    updateTaskStatus,
+    updateSubtask,
+    toggleSidebar,
+    toggleDarkMode,
+    openTaskModal,
+    closeTaskModal,
+    moveTask
+  }
+
+  useEffect(() => {
+    const updatedCurrentBoard = boards.find(board => board.name === currentBoard.name)
+    setCurrentBoard(updatedCurrentBoard)
+  }, [boards])
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark') // Apply to <html> for scrollbar styling
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [darkMode])
+
+
+  function openTaskModal(taskId) {
+    setActiveTaskId(taskId)
+    setIsTaskModalOpen(true)
+  }
+
+  function closeTaskModal() {
+    setIsTaskModalOpen(false)
+    setActiveTaskId(null)
+  }
+
+  function updateTaskStatus(taskId, newStatus) {
+    const currentActiveTaskId = activeTaskId
+
+    setBoards(prevBoards => {
+        return prevBoards.map(board => {
+            if (board.id !== currentBoard.id) return board;
+
+            let taskToMove
+            const updatedColumns = board.columns.map(column => {
+                if (column.tasks.some(task => task.id === taskId)) {
+                    taskToMove = column.tasks.find(task => task.id === taskId)
+                    return {
+                        ...column,
+                        tasks: column.tasks.filter(task => task.id !== taskId),
+                    }
+                }
+                return column;
+            })
+
+            if (!taskToMove) return board
+
+            taskToMove.status = newStatus
+
+            const updatedColumnsWithTask = updatedColumns.map(column => {
+                if (column.name === newStatus) {
+                    return { ...column, tasks: [...column.tasks, taskToMove] }
+                }
+                return column
+            })
+
+            return { ...board, columns: updatedColumnsWithTask }
+        })
+    })
+
+    if (currentActiveTaskId === taskId) {
+      setActiveTaskId(taskId);
+      setIsTaskModalOpen(true);
+  }
+}
+  
+  function updateSubtask(taskId, subtaskIndex) {
+    setBoards(prevBoards => {
+        const newBoards = prevBoards.map(board => {
+            if (board.id === currentBoard.id) {
+                return {
+                    ...board,
+                    columns: board.columns.map(column => ({
+                        ...column,
+                        tasks: column.tasks.map(task => {
+                            if (task.id === taskId) {
+                                const updatedSubtasks = [...task.subtasks]
+                                updatedSubtasks[subtaskIndex] = {
+                                    ...updatedSubtasks[subtaskIndex],
+                                    isCompleted: !updatedSubtasks[subtaskIndex].isCompleted
+                                }
+                                return { ...task, subtasks: updatedSubtasks }
+                            }
+                            return task
+                        })
+                    }))
+                }
+            }
+            return board
+        })
+        return newBoards
+    })
+  }
+
+  function toggleSidebar() {
+    setSidebarOpen(!sidebarOpen)
+  }
+
+  function toggleDarkMode() {
+    setDarkMode(!darkMode)
+  }
+
+  function moveTask(taskId, sourceColumnName, targetColumnName, targetIndex) {
+    setBoards(prevBoards => {
+      return prevBoards.map(board => {
+        if (board.id !== currentBoard.id) return board
+        
+        // Find and remove the task from the source column
+        let taskToMove = null
+        let updatedColumns = board.columns.map(column => {
+          if (column.name === sourceColumnName) {
+            const taskIndex = column.tasks.findIndex(task => task.id === taskId)
+            if (taskIndex !== -1) {
+              taskToMove = column.tasks[taskIndex]
+              // Return column with the task filtered out
+              return {
+                ...column,
+                tasks: column.tasks.filter(task => task.id !== taskId)
+              }
+            }
+          }
+          return column
+        })
+        
+        // If no task was found, return the board unchanged
+        if (!taskToMove) return board
+        
+        // Update the task's status to match the target column
+        taskToMove = {
+          ...taskToMove,
+          status: targetColumnName
+        }
+        
+        // Insert the task into the target column at the specified index
+        updatedColumns = updatedColumns.map(column => {
+          if (column.name === targetColumnName) {
+            const newTasks = [...column.tasks]
+            
+            if (typeof targetIndex === 'number') {
+              // Ensure target index is valid
+              const safeTargetIndex = Math.min(Math.max(0, targetIndex), newTasks.length)
+              newTasks.splice(safeTargetIndex, 0, taskToMove)
+              return { ...column, tasks: newTasks }
+            } else {
+              // If no target index is specified, add to the end
+              return { ...column, tasks: [...newTasks, taskToMove] }
+            }
+          }
+          return column
+        })
+        
+        // Return the updated board
+        return {
+          ...board,
+          columns: updatedColumns
+        }
+      })
+    })
+  }
+
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <BoardContext.Provider value={contextValue}>
+        <div className={`app ${darkMode ? 'dark' : ''} ${sidebarOpen ? 'sidebar-open' : ''}`}>
+          <Header />
+          {sidebarOpen 
+            ? <Sidebar /> 
+            : <SidebarMini />
+          }
+          <Main />
+        </div>
+      </BoardContext.Provider>
+    </DndProvider>
+  )
+}
+
+export default App
