@@ -1,6 +1,6 @@
 import MenuIcon from '../assets/icon-vertical-ellipsis.svg?react'
 import Select from 'react-select'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { BoardContext } from '../App'
 import { getCustomStyles } from '../utils/getCustomStyles.js'
 
@@ -11,6 +11,16 @@ function TaskModal({ task, hasSubtasks, totalSubtasks, completedSubtasks }) {
         value: column.name.toLowerCase(),
         label: column.name
     }))
+
+    useEffect(() => {
+        // Add modal-open class to body when component mounts
+        document.body.classList.add('modal-open')
+        
+        // Remove modal-open class from body when component unmounts
+        return () => {
+          document.body.classList.remove('modal-open')
+        }
+      }, [])
 
     function handleStatusChange(selectedOption) {
         updateTaskStatus(task.id, selectedOption.label)

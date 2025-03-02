@@ -73,6 +73,10 @@ body {
   background-color: var(--bg-light);
   color: var(--black);
 }
+/* Prevent scrolling on body when modal is open */
+body.modal-open {
+  position: fixed;
+}
 body .app.dark {
   background-color: var(--bg-dark);
   color: var(--white);

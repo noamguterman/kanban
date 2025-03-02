@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import Select from 'react-select'
 import CrossIcon from '../assets/icon-cross.svg?react'
@@ -17,6 +17,16 @@ function AddTask() {
         value: column.name.toLowerCase(),
         label: column.name
     }))
+
+    useEffect(() => {
+        // Add modal-open class to body when component mounts
+        document.body.classList.add('modal-open')
+        
+        // Remove modal-open class from body when component unmounts
+        return () => {
+          document.body.classList.remove('modal-open')
+        }
+      }, [])
 
     function handleStatusChange(selectedOption) {
         setStatus(selectedOption.label)
