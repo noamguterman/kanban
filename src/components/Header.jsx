@@ -5,7 +5,7 @@ import { useContext } from 'react'
 import { BoardContext } from '../App'
 
 function Header() {
-    const { darkMode, currentBoard, sidebarOpen } = useContext(BoardContext)
+    const { darkMode, currentBoard, sidebarOpen, openAddTaskModal } = useContext(BoardContext)
 
     return (
         <header className={`header ${darkMode ? 'dark' : ''}`}>
@@ -17,7 +17,11 @@ function Header() {
                 <h1>{currentBoard.name}</h1>
             </div>
             <div>
-                <button className='btn lg primary'>Add New Task</button>
+                <button 
+                    className='btn lg primary' 
+                    onClick={openAddTaskModal}>
+                        Add New Task
+                </button>
                 <button className='header__menu'>
                     <MenuIcon alt='Menu icon' />
                 </button>

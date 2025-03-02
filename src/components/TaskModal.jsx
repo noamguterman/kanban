@@ -72,7 +72,12 @@ function TaskModal({ task, hasSubtasks, totalSubtasks, completedSubtasks }) {
                         options={options}
                         value={options.find(option => option.value === task.status.toLowerCase())}
                         onChange={handleStatusChange}
-                        styles={customStyles}
+                        styles={{
+                            ...customStyles,
+                            menuPortal: (base) => ({ ...base, zIndex: 9999 })
+                        }}
+                        menuPortalTarget={document.body}
+                        menuPosition="fixed"
                         isSearchable={false}
                     />
                 </div>

@@ -7,6 +7,7 @@ import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import SidebarMini from './components/SidebarMini.jsx'
 import Main from './components/Main'
+import AddTask from './components/AddTask'
 
 function addIdsToData(boards) {
   return boards.map(board => ({
@@ -36,6 +37,7 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [activeTaskId, setActiveTaskId] = useState(null)
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
+  const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
   const contextValue = {
     darkMode,
     boards,
@@ -43,6 +45,7 @@ function App() {
     sidebarOpen,
     activeTaskId,
     isTaskModalOpen,
+    isAddTaskModalOpen,
     setCurrentBoard,
     updateTaskStatus,
     updateSubtask,
@@ -50,6 +53,9 @@ function App() {
     toggleDarkMode,
     openTaskModal,
     closeTaskModal,
+    openAddTaskModal,
+    closeAddTaskModal,
+    addNewTask,
     moveTask
   }
 
@@ -66,6 +72,34 @@ function App() {
     }
   }, [darkMode])
 
+  function openAddTaskModal() {
+    setIsAddTaskModalOpen(true)
+  }
+
+  function closeAddTaskModal() {
+    setIsAddTaskModalOpen(false)
+  }
+
+  function addNewTask(newTask) {
+    setBoards(prevBoards => {
+      return prevBoards.map(board => {
+        if (board.id !== currentBoard.id) return board
+        
+        return {
+          ...board,
+          columns: board.columns.map(column => {
+            if (column.name === newTask.status) {
+              return {
+                ...column,
+                tasks: [...column.tasks, newTask]
+              }
+            }
+            return column
+          })
+        }
+      })
+    })
+  }
 
   function openTaskModal(taskId) {
     setActiveTaskId(taskId)
@@ -82,7 +116,7 @@ function App() {
 
     setBoards(prevBoards => {
         return prevBoards.map(board => {
-            if (board.id !== currentBoard.id) return board;
+            if (board.id !== currentBoard.id) return board
 
             let taskToMove
             const updatedColumns = board.columns.map(column => {
@@ -93,7 +127,7 @@ function App() {
                         tasks: column.tasks.filter(task => task.id !== taskId),
                     }
                 }
-                return column;
+                return column
             })
 
             if (!taskToMove) return board
@@ -221,6 +255,7 @@ function App() {
             : <SidebarMini />
           }
           <Main />
+          {isAddTaskModalOpen && <AddTask />}
         </div>
       </BoardContext.Provider>
     </DndProvider>
