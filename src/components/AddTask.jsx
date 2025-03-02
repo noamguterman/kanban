@@ -19,10 +19,8 @@ function AddTask() {
     }))
 
     useEffect(() => {
-        // Add modal-open class to body when component mounts
         document.body.classList.add('modal-open')
         
-        // Remove modal-open class from body when component unmounts
         return () => {
           document.body.classList.remove('modal-open')
         }
