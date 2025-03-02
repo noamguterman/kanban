@@ -428,10 +428,12 @@ body .app.dark {
 .task__card.drop-above::before {
   content: '';
   position: absolute;
+  width: 95%;
   top: -8px;
   left: 0;
   right: 0;
   height: 4px;
+  margin: 0 auto;
   background-color: var(--purple);
   border-radius: 2px;
   z-index: 5;
@@ -439,10 +441,12 @@ body .app.dark {
 .task__card.drop-below::after {
   content: '';
   position: absolute;
+  width: 95%;
   bottom: -8px;
   left: 0;
   right: 0;
   height: 4px;
+  margin: 0 auto;
   background-color: var(--purple);
   border-radius: 2px;
   z-index: 5;
