@@ -56,7 +56,10 @@ function Column({ column }) {
             className={`column ${isOver ? 'drop-target' : ''}`}
             ref={columnRef}
         >
-            <span className='column__header--name'>{column.name} ({column.tasks.length})</span>
+            <div className='column__header'>
+                <span className={`column__header--dot ${column.color}`}></span>
+                <span className='column__header--name'>{column.name} ({column.tasks.length})</span>
+            </div>
             <div className='column__tasks' ref={tasksRef}>
                 {column.tasks.map((task, index) => (
                     <Task 

@@ -28,6 +28,11 @@
   --dark-grey: #2B2C37;
   --medium-grey: #828FA3;
   --light-grey: #d0d4dd;
+  --dot-color1: #49C4E5;
+  --dot-color2: #8471F2;
+  --dot-color3: #67E2AE;
+  --dot-color4: #fbbf24;
+  --dot-color5: #f472b6;
   --heading-xl: 700 1.5rem/1.875rem "Plus Jakarta Sans", sans-serif;
   --heading-l: 700 1.125rem/1.44rem "Plus Jakarta Sans", sans-serif;
   --heading-m: 700 .94rem/1.19rem "Plus Jakarta Sans", sans-serif;
@@ -353,12 +358,29 @@ body .app.dark {
   min-height: 100%;
   padding: .75rem;
 }
+.column__header {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding-bottom: 1.5rem;
+}
+.column__header--dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: var(--purple);
+}
+.column__header--dot.color1 { background-color: var(--dot-color1); }
+.column__header--dot.color2 { background-color: var(--dot-color2); }
+.column__header--dot.color3 { background-color: var(--dot-color3); }
+.column__header--dot.color4 { background-color: var(--dot-color4); }
+.column__header--dot.color5 { background-color: var(--dot-color5); }
+
 .column__header--name {
   font: var(--heading-s);
   color: var(--medium-grey);
   text-transform: uppercase;
   letter-spacing: var(--heading-s-kerning);
-  padding-bottom: 1.5rem;
 }
 .column__tasks {
   display: flex;
