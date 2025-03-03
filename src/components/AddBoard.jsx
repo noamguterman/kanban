@@ -66,10 +66,6 @@ function AddBoard() {
 
 
     function handleRemoveColumn(id) {
-        if (columns.length <= 1) {
-            return
-        }
-
         setColumns(columns.filter(column => column.id !== id))
     }
 
@@ -82,16 +78,13 @@ function AddBoard() {
     function handleSubmit(e) {
         e.preventDefault()
         
-        // Trim the name to avoid whitespace-only names
         const trimmedName = name.trim()
         
-        // Validate board name
         if (!trimmedName) {
             setNameError('Board name cannot be empty')
             return
         }
         
-        // Check for duplicate board names (case insensitive)
         const isDuplicate = boards.some(board => 
             board.name.toLowerCase() === trimmedName.toLowerCase()
         )
@@ -101,14 +94,6 @@ function AddBoard() {
             return
         }
         
-        // Check if all columns have names
-        const hasEmptyColumns = columns.some(column => !column.name.trim())
-        if (hasEmptyColumns) {
-            setNameError('All columns must have names')
-            return
-        }
-        
-        // Create new board object
         const newBoard = {
             name: trimmedName,
             columns: columns.map(col => ({
@@ -117,10 +102,7 @@ function AddBoard() {
             }))
         }
         
-        // Add the board
         addNewBoard(newBoard)
-        
-        // Close the modal
         closeAddBoardModal()
     }
 
@@ -138,7 +120,6 @@ function AddBoard() {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             className={`${darkMode ? 'dark' : ''} ${nameError ? 'error' : ''}`}
-                            required
                         />
                         {nameError && (
                             <p className="form-error">{nameError}</p>
@@ -168,8 +149,7 @@ function AddBoard() {
                                     type="button" 
                                     className="remove-subtask" 
                                     onClick={() => handleRemoveColumn(column.id)}
-                                    disabled={columns.length <= 1}
-                                    style={{ opacity: columns.length <= 1 ? 0.5 : 1, cursor: columns.length <= 1 ? 'not-allowed' : 'pointer' }}
+                                    style={{ cursor: 'pointer' }}
                                 >
                                     <CrossIcon />
                                 </button>
