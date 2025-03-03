@@ -47,6 +47,24 @@ function AddBoard() {
         ])
     }
 
+    function handleColorChange(id) {
+        const colorOptions = ['color1', 'color2', 'color3', 'color4', 'color5']
+        
+        setColumns(columns.map(column => {
+            if (column.id === id) {
+                const currentIndex = colorOptions.indexOf(column.color)
+                const nextIndex = (currentIndex + 1) % colorOptions.length
+                
+                return {
+                    ...column,
+                    color: colorOptions[nextIndex]
+                }
+            }
+            return column;
+        }))
+    }
+
+
     function handleRemoveColumn(id) {
         if (columns.length <= 1) {
             return
@@ -131,6 +149,13 @@ function AddBoard() {
                         <label>Columns</label>
                         {columns.map((column) => (
                             <div key={column.id} className="subtask-input">
+                                <button 
+                                    type='button' 
+                                    className={`column__dot ${column.color}`}
+                                    onClick={() => handleColorChange(column.id)}
+                                    title="Click to change column color"
+                                >
+                                </button>
                                 <input 
                                     type="text"
                                     placeholder="e.g. Todo"

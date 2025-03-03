@@ -385,17 +385,33 @@ body .app.dark {
   gap: .75rem;
   padding-bottom: 1.5rem;
 }
+.column__dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: var(--purple);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.column__dot:active {
+  transform: scale(0.9);
+}
+.column__dot:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
 .column__header--dot {
   width: 15px;
   height: 15px;
   border-radius: 50%;
   background-color: var(--purple);
 }
-.column__header--dot.color1 { background-color: var(--dot-color1); }
-.column__header--dot.color2 { background-color: var(--dot-color2); }
-.column__header--dot.color3 { background-color: var(--dot-color3); }
-.column__header--dot.color4 { background-color: var(--dot-color4); }
-.column__header--dot.color5 { background-color: var(--dot-color5); }
+.color1 { background-color: var(--dot-color1); }
+.color2 { background-color: var(--dot-color2); }
+.color3 { background-color: var(--dot-color3); }
+.color4 { background-color: var(--dot-color4); }
+.color5 { background-color: var(--dot-color5); }
 
 .column__header--name {
   font: var(--heading-s);
