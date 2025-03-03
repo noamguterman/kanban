@@ -77,6 +77,9 @@ body {
 body.modal-open {
   position: fixed;
 }
+body.modal-open .main {
+  overflow-y: hidden !important;
+}
 body .app.dark {
   background-color: var(--bg-dark);
   color: var(--white);
