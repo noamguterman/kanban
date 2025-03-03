@@ -143,6 +143,7 @@ function App() {
           setEditBoardShouldAddColumn(true)
       }, 0)
     }
+    setIsHeaderMenuOpen(false)
   }
   function closeEditBoardModal() {
     setIsEditBoardModalOpen(false)
