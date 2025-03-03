@@ -67,6 +67,7 @@ function App() {
     openEditBoardModal,
     closeEditBoardModal,
     editBoardShouldAddColumn,
+    resetEditBoardAddColumnFlag,
     addNewTask,
     addNewBoard,
     updateBoard,
@@ -117,7 +118,11 @@ function App() {
 
   function openEditBoardModal(shouldAddColumn = false) {
     setIsEditBoardModalOpen(true)
-    setEditBoardShouldAddColumn(shouldAddColumn)
+    if (shouldAddColumn) {
+      setTimeout(() => {
+          setEditBoardShouldAddColumn(true)
+      }, 0)
+    }
   }
   function closeEditBoardModal() {
     setIsEditBoardModalOpen(false)
@@ -132,6 +137,9 @@ function App() {
 
     setCurrentBoard(updatedBoard)
   }
+  function resetEditBoardAddColumnFlag() {
+    setEditBoardShouldAddColumn(false)
+}
   
   function addNewTask(newTask) {
     setBoards(prevBoards => {

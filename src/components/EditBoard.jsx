@@ -4,7 +4,7 @@ import CrossIcon from '../assets/icon-cross.svg?react'
 import { BoardContext } from '../App'
 
 function EditBoard() {
-    const { darkMode, closeEditBoardModal, updateBoard, boards, currentBoard, editBoardShouldAddColumn } = useContext(BoardContext)
+    const { darkMode, closeEditBoardModal, updateBoard, boards, currentBoard, editBoardShouldAddColumn, resetEditBoardAddColumnFlag } = useContext(BoardContext)
     const [name, setName] = useState(currentBoard.name)
     const [nameError, setNameError] = useState('')
     const [columns, setColumns] = useState(
@@ -31,12 +31,11 @@ function EditBoard() {
     }, [])
 
     useEffect(() => {
-        // Only run once when component mounts and only if flag is true
-        if (editBoardShouldAddColumn && columns.length === 0) {
-            const newColumnId = handleAddColumn()
-            shouldFocusNewColumn.current = true
+        if (editBoardShouldAddColumn) {
+            handleAddColumn()
+            resetEditBoardAddColumnFlag()
         }
-    }, [editBoardShouldAddColumn]) // Only run when this prop changes
+    }, [editBoardShouldAddColumn, resetEditBoardAddColumnFlag])
 
     useEffect(() => {
         if (shouldFocusNewColumn.current && newColumnInputRef.current) {
@@ -60,18 +59,19 @@ function EditBoard() {
 
         const newColumnId = uuidv4()
         
-        setColumns([
-            ...columns, 
-            { 
-                id: newColumnId, 
-                name: '', 
-                color: colorOptions[colorIndex],
-                tasks: []
-            }
-        ])
-
-        shouldFocusNewColumn.current = true
-
+        setColumns(prevColumns => {
+            shouldFocusNewColumn.current = true
+            return [
+                ...prevColumns, 
+                { 
+                    id: newColumnId, 
+                    name: '', 
+                    color: colorOptions[colorIndex],
+                    tasks: []
+                }
+            ];
+        });
+    
         return newColumnId
     }
 

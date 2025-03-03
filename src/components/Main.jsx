@@ -22,7 +22,19 @@ function Main() {
 
     return (
         <div className='main'>
-            {columns.length ? columns : emptyBoardCta}
+            {columns.length 
+                ? 
+                    <>
+                        {columns}
+                        <button 
+                            className='column-ghost'
+                            onClick={() => openEditBoardModal(true)}
+                        >
+                            + New Column
+                        </button>
+                    </> 
+                : emptyBoardCta
+            }
         </div>
     )
 }
