@@ -8,6 +8,7 @@ import Sidebar from './components/Sidebar'
 import SidebarMini from './components/SidebarMini.jsx'
 import Main from './components/Main'
 import AddTask from './components/AddTask'
+import AddBoard from './components/AddBoard'
 
 function addIdsToData(boards) {
   return boards.map(board => ({
@@ -38,6 +39,7 @@ function App() {
   const [activeTaskId, setActiveTaskId] = useState(null)
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
+  const [isAddBoardModalOpen, setIsAddBoardModalOpen] = useState(false)
   const contextValue = {
     darkMode,
     boards,
@@ -46,6 +48,7 @@ function App() {
     activeTaskId,
     isTaskModalOpen,
     isAddTaskModalOpen,
+    isAddBoardModalOpen,
     setCurrentBoard,
     updateTaskStatus,
     updateSubtask,
@@ -55,7 +58,10 @@ function App() {
     closeTaskModal,
     openAddTaskModal,
     closeAddTaskModal,
+    openAddBoardModal,
+    closeAddBoardModal,
     addNewTask,
+    addNewBoard,
     moveTask
   }
 
@@ -75,11 +81,26 @@ function App() {
   function openAddTaskModal() {
     setIsAddTaskModalOpen(true)
   }
-
   function closeAddTaskModal() {
     setIsAddTaskModalOpen(false)
   }
 
+  function openAddBoardModal() {
+    setIsAddBoardModalOpen(true)
+  }
+  function closeAddBoardModal() {
+    setIsAddBoardModalOpen(false)
+  }
+  
+  function openTaskModal(taskId) {
+    setActiveTaskId(taskId)
+    setIsTaskModalOpen(true)
+  }
+  function closeTaskModal() {
+    setIsTaskModalOpen(false)
+    setActiveTaskId(null)
+  }
+  
   function addNewTask(newTask) {
     setBoards(prevBoards => {
       return prevBoards.map(board => {
@@ -101,15 +122,21 @@ function App() {
     })
   }
 
-  function openTaskModal(taskId) {
-    setActiveTaskId(taskId)
-    setIsTaskModalOpen(true)
-  }
-
-  function closeTaskModal() {
-    setIsTaskModalOpen(false)
-    setActiveTaskId(null)
-  }
+  function addNewBoard(newBoard) {
+    setBoards(prevBoards => {
+      return [
+        ...prevBoards,
+        {
+          ...newBoard,
+          id: uuidv4(),
+          columns: newBoard.columns.map(column => ({
+            ...column,
+            id: uuidv4(),
+            tasks: []
+          }))
+        }
+      ]
+    })}
 
   function updateTaskStatus(taskId, newStatus) {
     const currentActiveTaskId = activeTaskId
@@ -256,6 +283,7 @@ function App() {
           }
           <Main />
           {isAddTaskModalOpen && <AddTask />}
+          {isAddBoardModalOpen && <AddBoard />}
         </div>
       </BoardContext.Provider>
     </DndProvider>

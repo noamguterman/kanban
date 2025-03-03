@@ -125,6 +125,19 @@ body .app.dark {
 .btn.destructive:hover {
   background-color: var(--red-hover);
 }
+.btn.disabled, 
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+  background-color: var(--medium-grey);
+}
+
+.btn.secondary.disabled,
+.btn.secondary:disabled {
+  background-color: transparent;
+  color: var(--medium-grey);
+  border-color: var(--medium-grey);
+}
 
 .app {
   position: relative;
@@ -637,6 +650,17 @@ body .app.dark {
 .task-modal__content form button[type="submit"] {
   width: 100%;
   margin-top: 1rem;
+}
+
+.form-error {
+  color: var(--red);
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+}
+
+input.error, 
+textarea.error {
+  border-color: var(--red) !important;
 }
 
 * {

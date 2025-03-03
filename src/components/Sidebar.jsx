@@ -8,7 +8,7 @@ import { useContext } from 'react'
 import { BoardContext } from '../App'
 
 function Sidebar() {
-    const { darkMode, boards, currentBoard, setCurrentBoard, toggleDarkMode, toggleSidebar } = useContext(BoardContext)
+    const { darkMode, boards, currentBoard, setCurrentBoard, toggleDarkMode, toggleSidebar, openAddBoardModal } = useContext(BoardContext)
     const boardCount = boards.length
     const boardItems = boards.map(board => {
         return (
@@ -32,7 +32,7 @@ function Sidebar() {
                 <div className='sidebar__boards'>
                     <span className='sidebar__boards--all-boards'>All Boards ({boardCount})</span>
                     {boardItems}
-                    <div className='sidebar__boards--board new'>
+                    <div className='sidebar__boards--board new' onClick={openAddBoardModal}>
                         <BoardIcon className='sidebar__boards--board--icon' alt='Board icon' />
                         <span className='sidebar__boards--board--name'>+ Create New Board</span>
                     </div>
