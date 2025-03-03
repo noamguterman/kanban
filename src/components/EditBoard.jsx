@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import CrossIcon from '../assets/icon-cross.svg?react'
 import { BoardContext } from '../App'
@@ -15,6 +15,8 @@ function EditBoard() {
             tasks: col.tasks
         }))
     )
+    const newColumnInputRef = useRef(null)
+    const shouldFocusNewColumn = useRef(false)
 
     useEffect(() => {
         if (nameError) setNameError('')
@@ -31,10 +33,18 @@ function EditBoard() {
     useEffect(() => {
         // Only run once when component mounts and only if flag is true
         if (editBoardShouldAddColumn && columns.length === 0) {
-            handleAddColumn()
+            const newColumnId = handleAddColumn()
+            shouldFocusNewColumn.current = true
         }
     }, [editBoardShouldAddColumn]) // Only run when this prop changes
 
+    useEffect(() => {
+        if (shouldFocusNewColumn.current && newColumnInputRef.current) {
+            newColumnInputRef.current.focus();
+            shouldFocusNewColumn.current = false;
+        }
+    }, [columns])
+    
     function handleBackdropClick(e) {
         if (e.target === e.currentTarget) {
             closeEditBoardModal()
@@ -43,20 +53,26 @@ function EditBoard() {
 
     function handleAddColumn() {
         if (columns.length >= 5) {
-            return
+            return null
         }
         const colorOptions = ['color1', 'color2', 'color3', 'color4', 'color5']
         const colorIndex = columns.length % colorOptions.length
+
+        const newColumnId = uuidv4()
         
         setColumns([
             ...columns, 
             { 
-                id: uuidv4(), 
+                id: newColumnId, 
                 name: '', 
                 color: colorOptions[colorIndex],
                 tasks: []
             }
         ])
+
+        shouldFocusNewColumn.current = true
+
+        return newColumnId
     }
 
     function handleColorChange(id) {
@@ -150,7 +166,7 @@ function EditBoard() {
                     
                     <div className="form-group">
                         <label>Columns</label>
-                        {columns.map((column) => (
+                        {columns.map((column, index) => (
                             <div key={column.id} className="subtask-input">
                                 <button 
                                     type='button' 
@@ -166,6 +182,7 @@ function EditBoard() {
                                     onChange={(e) => handleColumnNameChange(column.id, e.target.value)}
                                     className={darkMode ? 'dark' : ''}
                                     required
+                                    ref={index === columns.length - 1 ? newColumnInputRef : null}
                                 />
                                 <button 
                                     type="button" 

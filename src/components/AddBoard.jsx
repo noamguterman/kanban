@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import CrossIcon from '../assets/icon-cross.svg?react'
 import { BoardContext } from '../App'
@@ -11,6 +11,8 @@ function AddBoard() {
         { id: uuidv4(), name: 'Todo', color: 'color1' },
         { id: uuidv4(), name: 'Doing', color: 'color2' }
     ])
+    const newColumnInputRef = useRef(null)
+    const shouldFocusNewColumn = useRef(false)
 
     useEffect(() => {
         if (nameError) setNameError('')
@@ -23,6 +25,13 @@ function AddBoard() {
             document.body.classList.remove('modal-open')
         }
     }, [])
+
+    useEffect(() => {
+        if (shouldFocusNewColumn.current && newColumnInputRef.current) {
+            newColumnInputRef.current.focus()
+            shouldFocusNewColumn.current = false
+        }
+    }, [columns])
 
     function handleBackdropClick(e) {
         if (e.target === e.currentTarget) {
@@ -45,6 +54,8 @@ function AddBoard() {
                 color: colorOptions[colorIndex]
             }
         ])
+
+        shouldFocusNewColumn.current = true
     }
 
     function handleColorChange(id) {
@@ -60,7 +71,7 @@ function AddBoard() {
                     color: colorOptions[nextIndex]
                 }
             }
-            return column;
+            return column
         }))
     }
 
@@ -128,7 +139,7 @@ function AddBoard() {
                     
                     <div className="form-group">
                         <label>Columns</label>
-                        {columns.map((column) => (
+                        {columns.map((column, index) => (
                             <div key={column.id} className="subtask-input">
                                 <button 
                                     type='button' 
@@ -144,6 +155,7 @@ function AddBoard() {
                                     onChange={(e) => handleColumnNameChange(column.id, e.target.value)}
                                     className={darkMode ? 'dark' : ''}
                                     required
+                                    ref={index === columns.length - 1 ? newColumnInputRef : null}
                                 />
                                 <button 
                                     type="button" 
