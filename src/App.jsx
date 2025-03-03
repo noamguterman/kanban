@@ -42,6 +42,7 @@ function App() {
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
   const [isAddBoardModalOpen, setIsAddBoardModalOpen] = useState(false)
   const [isEditBoardModalOpen, setIsEditBoardModalOpen] = useState(false)
+  const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false)
   const [editBoardShouldAddColumn, setEditBoardShouldAddColumn] = useState(false)
   const [targetColumnName, setTargetColumnName] = useState(null)
   const contextValue = {
@@ -61,6 +62,7 @@ function App() {
     toggleDarkMode,
     openTaskModal,
     closeTaskModal,
+    handleHeaderMenuClick,
     openAddTaskModal,
     closeAddTaskModal,
     targetColumnName,
@@ -73,7 +75,8 @@ function App() {
     addNewTask,
     addNewBoard,
     updateBoard,
-    moveTask
+    moveTask,
+    isHeaderMenuOpen
   }
 
   useEffect(() => {
@@ -107,6 +110,14 @@ function App() {
   function closeAddTaskModal() {
     setIsAddTaskModalOpen(false)
     setTargetColumnName(null)
+  }
+
+  function handleHeaderMenuClick() {
+    if (isHeaderMenuOpen) {
+      setIsHeaderMenuOpen(false)
+    } else {
+      setIsHeaderMenuOpen(true)
+    }
   }
 
   function openAddBoardModal() {
