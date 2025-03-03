@@ -361,7 +361,7 @@ body .app.dark {
   gap: 1.5em;
   cursor: pointer;
   margin: 0 1.5rem;
-  transition: background-color .3s ease;
+  transition: background-color .1s ease;
 }
 .sidebar__theme:hover {
   background-color: var(--lines-light);
@@ -597,6 +597,9 @@ body .app.dark {
 .task__card.dark {
   background-color: var(--dark-grey);
   color: var(--white);
+}
+.task__card.dark:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 .task__card--title {
   display: block;
