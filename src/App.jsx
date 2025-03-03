@@ -9,6 +9,7 @@ import SidebarMini from './components/SidebarMini.jsx'
 import Main from './components/Main'
 import AddTask from './components/AddTask'
 import AddBoard from './components/AddBoard'
+import EditBoard from './components/EditBoard'
 
 function addIdsToData(boards) {
   return boards.map(board => ({
@@ -40,6 +41,8 @@ function App() {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
   const [isAddBoardModalOpen, setIsAddBoardModalOpen] = useState(false)
+  const [isEditBoardModalOpen, setIsEditBoardModalOpen] = useState(false)
+  const [editBoardShouldAddColumn, setEditBoardShouldAddColumn] = useState(false)
   const contextValue = {
     darkMode,
     boards,
@@ -49,6 +52,7 @@ function App() {
     isTaskModalOpen,
     isAddTaskModalOpen,
     isAddBoardModalOpen,
+    isEditBoardModalOpen,
     setCurrentBoard,
     updateTaskStatus,
     updateSubtask,
@@ -60,14 +64,24 @@ function App() {
     closeAddTaskModal,
     openAddBoardModal,
     closeAddBoardModal,
+    openEditBoardModal,
+    closeEditBoardModal,
+    editBoardShouldAddColumn,
     addNewTask,
     addNewBoard,
+    updateBoard,
     moveTask
   }
 
   useEffect(() => {
-    const updatedCurrentBoard = boards.find(board => board.name === currentBoard.name)
-    setCurrentBoard(updatedCurrentBoard)
+    const updatedCurrentBoard = boards.find(board => board.id === currentBoard.id)
+    
+    if (updatedCurrentBoard) {
+      setCurrentBoard(updatedCurrentBoard)
+    } else if (boards.length > 0) {
+      // If current board was deleted, select the first available board
+      setCurrentBoard(boards[0])
+    }
   }, [boards])
 
   useEffect(() => {
@@ -99,6 +113,24 @@ function App() {
   function closeTaskModal() {
     setIsTaskModalOpen(false)
     setActiveTaskId(null)
+  }
+
+  function openEditBoardModal(shouldAddColumn = false) {
+    setIsEditBoardModalOpen(true)
+    setEditBoardShouldAddColumn(shouldAddColumn)
+  }
+  function closeEditBoardModal() {
+    setIsEditBoardModalOpen(false)
+    setEditBoardShouldAddColumn(false)
+  }
+  function updateBoard(updatedBoard) {
+    setBoards(prevBoards => {
+      return prevBoards.map(board => 
+        board.id === updatedBoard.id ? updatedBoard : board
+      )
+    })
+
+    setCurrentBoard(updatedBoard)
   }
   
   function addNewTask(newTask) {
@@ -284,6 +316,7 @@ function App() {
           <Main />
           {isAddTaskModalOpen && <AddTask />}
           {isAddBoardModalOpen && <AddBoard />}
+          {isEditBoardModalOpen && <EditBoard />}
         </div>
       </BoardContext.Provider>
     </DndProvider>

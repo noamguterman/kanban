@@ -14,7 +14,7 @@ function Sidebar() {
         return (
             <div 
                 key={`board-${board.id}`} 
-                className={`sidebar__boards--board ${board.name === currentBoard.name ? 'active' : ''}`}
+                className={`sidebar__boards--board ${board.id === currentBoard.id ? 'active' : ''}`}
                 onClick={() => setCurrentBoard(board)}
             >
                 <BoardIcon className='sidebar__boards--board--icon' alt='Board icon' />

@@ -3,14 +3,18 @@ import { v4 as uuidv4 } from 'uuid'
 import CrossIcon from '../assets/icon-cross.svg?react'
 import { BoardContext } from '../App'
 
-function AddBoard() {
-    const { darkMode, closeAddBoardModal, addNewBoard, boards } = useContext(BoardContext)
-    const [name, setName] = useState('')
+function EditBoard() {
+    const { darkMode, closeEditBoardModal, updateBoard, boards, currentBoard, editBoardShouldAddColumn } = useContext(BoardContext)
+    const [name, setName] = useState(currentBoard.name)
     const [nameError, setNameError] = useState('')
-    const [columns, setColumns] = useState([
-        { id: uuidv4(), name: 'Todo', color: 'color1' },
-        { id: uuidv4(), name: 'Doing', color: 'color2' }
-    ])
+    const [columns, setColumns] = useState(
+        currentBoard.columns.map(col => ({
+            id: col.id,
+            name: col.name,
+            color: col.color || 'color1',
+            tasks: col.tasks
+        }))
+    )
 
     useEffect(() => {
         if (nameError) setNameError('')
@@ -24,9 +28,16 @@ function AddBoard() {
         }
     }, [])
 
+    useEffect(() => {
+        // Only run once when component mounts and only if flag is true
+        if (editBoardShouldAddColumn && columns.length === 0) {
+            handleAddColumn()
+        }
+    }, [editBoardShouldAddColumn]) // Only run when this prop changes
+
     function handleBackdropClick(e) {
         if (e.target === e.currentTarget) {
-            closeAddBoardModal()
+            closeEditBoardModal()
         }
     }
 
@@ -42,7 +53,8 @@ function AddBoard() {
             { 
                 id: uuidv4(), 
                 name: '', 
-                color: colorOptions[colorIndex]
+                color: colorOptions[colorIndex],
+                tasks: []
             }
         ])
     }
@@ -64,7 +76,6 @@ function AddBoard() {
         }))
     }
 
-
     function handleRemoveColumn(id) {
         setColumns(columns.filter(column => column.id !== id))
     }
@@ -85,7 +96,9 @@ function AddBoard() {
             return
         }
         
+        // Check for duplicate name, but exclude current board
         const isDuplicate = boards.some(board => 
+            board.id !== currentBoard.id && 
             board.name.toLowerCase() === trimmedName.toLowerCase()
         )
         
@@ -94,22 +107,31 @@ function AddBoard() {
             return
         }
         
-        const newBoard = {
+        // Prepare updated board data
+        const updatedBoard = {
+            ...currentBoard,
             name: trimmedName,
-            columns: columns.map(col => ({
-                ...col,
-                tasks: []
-            }))
+            columns: columns.map(col => {
+                // Preserve existing tasks for columns that already existed
+                const existingColumn = currentBoard.columns.find(c => c.id === col.id)
+                return {
+                    ...col,
+                    tasks: existingColumn ? existingColumn.tasks : []
+                }
+            })
         }
         
-        addNewBoard(newBoard)
-        closeAddBoardModal()
+        // Update board
+        updateBoard(updatedBoard)
+        
+        // Close modal
+        closeEditBoardModal()
     }
 
     return (
         <div className="task-modal" onClick={handleBackdropClick}>
             <div className={`task-modal__content ${darkMode ? 'dark' : ''}`} onClick={e => e.stopPropagation()}>
-                <h2 className="task-modal__content--header--title">Add New Board</h2>
+                <h2 className="task-modal__content--header--title">Edit Board</h2>
                 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -166,7 +188,7 @@ function AddBoard() {
                     </div>
                     
                     <button type="submit" className="btn sm primary">
-                        Create New Board
+                        Save Changes
                     </button>
                 </form>
             </div>
@@ -174,4 +196,4 @@ function AddBoard() {
     )
 }
 
-export default AddBoard
+export default EditBoard
