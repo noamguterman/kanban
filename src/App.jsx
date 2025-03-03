@@ -43,6 +43,7 @@ function App() {
   const [isAddBoardModalOpen, setIsAddBoardModalOpen] = useState(false)
   const [isEditBoardModalOpen, setIsEditBoardModalOpen] = useState(false)
   const [editBoardShouldAddColumn, setEditBoardShouldAddColumn] = useState(false)
+  const [targetColumnName, setTargetColumnName] = useState(null)
   const contextValue = {
     darkMode,
     boards,
@@ -62,6 +63,7 @@ function App() {
     closeTaskModal,
     openAddTaskModal,
     closeAddTaskModal,
+    targetColumnName,
     openAddBoardModal,
     closeAddBoardModal,
     openEditBoardModal,
@@ -93,11 +95,18 @@ function App() {
     }
   }, [darkMode])
 
-  function openAddTaskModal() {
+  function openAddTaskModal(columnName = null) {
     setIsAddTaskModalOpen(true)
+    
+    if (columnName) {
+      setTargetColumnName(columnName)
+    } else {
+      setTargetColumnName(null)
+    }
   }
   function closeAddTaskModal() {
     setIsAddTaskModalOpen(false)
+    setTargetColumnName(null)
   }
 
   function openAddBoardModal() {

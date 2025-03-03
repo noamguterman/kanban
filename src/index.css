@@ -26,6 +26,7 @@
   --lines-dark: #3E3F4E;
   --lines-light: #E4EBFA;
   --dark-grey: #2B2C37;
+  --darker-grey: #262731;
   --medium-grey: #828FA3;
   --light-grey: #d0d4dd;
   --dot-color1: #49C4E5;
@@ -460,6 +461,29 @@ body .app.dark {
   opacity: 1;
   transition: opacity 0.5s ease;
 }
+.column-ghost.dark {
+  background-color: var(--lines-dark);
+}
+.task-ghost {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background-color: var(--lines-light);
+  border: none;
+  border-radius: 8px;
+  font: var(--heading-l);
+  color: var(--medium-grey);
+  cursor: pointer;
+  padding: 1.5rem 1rem;
+  margin-top: 1.25rem;
+  width: 100%;
+}
+.task-ghost:hover {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+.task-ghost.dark {
+  background-color: var(--lines-dark);
+}
 
 .task__card {
   display: flex;
@@ -468,7 +492,6 @@ body .app.dark {
   background-color: var(--white);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 15.5rem;
   padding: 1.5rem 1rem;
   width: 100%;
   cursor: pointer;

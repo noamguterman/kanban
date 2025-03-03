@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import { BoardContext } from '../App'
 
 function Main() {
-    const { currentBoard, openEditBoardModal } = useContext(BoardContext)
+    const { currentBoard, openEditBoardModal, darkMode } = useContext(BoardContext)
     const columns = currentBoard.columns.map(column => {
         return (
             <Column key={`column-${column.id}`} column={column} />
@@ -27,7 +27,7 @@ function Main() {
                     <>
                         {columns}
                         <button 
-                            className='column-ghost'
+                            className={`column-ghost ${darkMode ? 'dark' : ''}`}
                             onClick={() => openEditBoardModal(true)}
                         >
                             + New Column

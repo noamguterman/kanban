@@ -6,11 +6,12 @@ import { BoardContext } from '../App'
 import { getCustomStyles } from '../utils/getCustomStyles_addTask.js'
 
 function AddTask() {
-    const { currentBoard, darkMode, addNewTask, closeAddTaskModal } = useContext(BoardContext)
+    const { currentBoard, darkMode, addNewTask, closeAddTaskModal, targetColumnName } = useContext(BoardContext)
     const customStyles = getCustomStyles(darkMode)
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
-    const [status, setStatus] = useState(currentBoard.columns[0]?.name || '')
+    const initialStatus = targetColumnName || currentBoard.columns[0]?.name || ''
+    const [status, setStatus] = useState(initialStatus)
     const [subtasks, setSubtasks] = useState([])
 
     const options = currentBoard.columns.map(column => ({

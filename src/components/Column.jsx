@@ -4,15 +4,12 @@ import { BoardContext } from '../App'
 import Task from './Task'
 
 function Column({ column }) {
-    const { moveTask } = useContext(BoardContext)
+    const { moveTask, openAddTaskModal, darkMode } = useContext(BoardContext)
     const columnRef = useRef(null)
     const tasksRef = useRef(null)
 
     const [{ isOver }, drop] = useDrop(() => ({
         accept: 'task',
-        hover: (item, monitor) => {
-            // Optional hover feedback
-        },
         drop: (item, monitor) => {
             if (item.columnName === column.name) {
                 return
@@ -23,11 +20,9 @@ function Column({ column }) {
             
             let targetIndex = column.tasks.length // Default to end of list
             
-            // If tasksRef exists and has children (there are tasks in the column)
             if (tasksRef.current && tasksRef.current.children.length > 0) {
                 const taskElements = Array.from(tasksRef.current.children)
                 
-                // Find the closest task element based on mouse Y position
                 for (let i = 0; i < taskElements.length; i++) {
                     const taskRect = taskElements[i].getBoundingClientRect()
                     const taskMiddleY = taskRect.top + taskRect.height / 2
@@ -39,7 +34,6 @@ function Column({ column }) {
                 }
             }
             
-            // Move the task to the target position
             moveTask(item.id, item.columnName, column.name, targetIndex)
         },
         collect: (monitor) => ({
@@ -48,7 +42,6 @@ function Column({ column }) {
         })
     }))
 
-    // Apply the drop ref to the column container
     drop(columnRef)
     
     return (
@@ -70,6 +63,12 @@ function Column({ column }) {
                     />
                 ))}
             </div>
+            <button 
+                className={`task-ghost ${darkMode ? 'dark' : ''}`}
+                onClick={() => openAddTaskModal(column.name)}
+            >
+                + New Task
+            </button>
         </div>
     )
 }
