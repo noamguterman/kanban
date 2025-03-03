@@ -88,7 +88,7 @@ body .app.dark {
   border: none;
   cursor: pointer;
   padding: 0 3rem;
-  transition: background-color .2s ease;
+  transition: background-color .1s ease;
 }
 .btn:active {
   transform: scale(0.95);
@@ -312,7 +312,6 @@ body .app.dark {
   padding-left: 2rem;
   font: var(--heading-m);
   border-radius: 0 2rem 2rem 0;
-  transition: background-color .3s ease;
 }
 .sidebar__boards--board--name:active {
   transform: scale(0.98);
@@ -716,7 +715,7 @@ body .app.dark {
   padding: .8rem;
   font: var(--body-m);
   cursor: pointer;
-  transition: all .3s ease;
+  transition: all .1s ease;
 }
 .task-modal__content--subtasks--subtask:hover {
   background-color: var(--purple-opacity25);
