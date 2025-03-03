@@ -88,6 +88,10 @@ body .app.dark {
   border: none;
   cursor: pointer;
   padding: 0 3rem;
+  transition: background-color .2s ease;
+}
+.btn:active {
+  transform: scale(0.95);
 }
 .btn.lg {
   font: var(--heading-m);
@@ -225,7 +229,7 @@ body .app.dark {
   font: var(--body-m);
   color: var(--medium-grey);
   border: none;
-  border-radius: 8px;
+  border-radius: 8px 0 0 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: all .3s ease;
@@ -233,17 +237,6 @@ body .app.dark {
   animation-delay: calc(var(--item-index, 0) * 0.05s);
   opacity: 0;
   transform: translateY(-10px);
-}
-
-@keyframes dropdownOpen {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
 }
 
 .header__menu--dropdown .btn-edit {
@@ -268,17 +261,6 @@ body .app.dark {
 }
 .header__menu--dropdown .btn-delete.dark {
   background-color: var(--dark-grey);
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .sidebar {
@@ -329,6 +311,14 @@ body .app.dark {
   padding: 1rem 0;
   padding-left: 2rem;
   font: var(--heading-m);
+  border-radius: 0 2rem 2rem 0;
+  transition: background-color .3s ease;
+}
+.sidebar__boards--board--name:active {
+  transform: scale(0.98);
+}
+.sidebar__boards--board:hover {
+  background-color: var(--purple-opacity10);
 }
 .sidebar__boards--board--icon {
   width: 16px;
@@ -342,6 +332,7 @@ body .app.dark {
   background-color: var(--purple);
   border-radius: 0 2rem 2rem 0;
 }
+
 .sidebar__boards--board.active .sidebar__boards--board--name {
   color: var(--white);
 }
@@ -354,6 +345,13 @@ body .app.dark {
 .sidebar__boards--board.new .sidebar__boards--board--icon {
   color: var(--purple);
 }
+.sidebar__boards--board.new {
+  transition: all .3s ease;
+}
+.sidebar__boards--board.new:hover {
+  background-color: inherit;
+  transform: scale(.98);
+}
 .sidebar__theme {
   background-color: var(--bg-light);
   border-radius: 6px;
@@ -364,9 +362,19 @@ body .app.dark {
   gap: 1.5em;
   cursor: pointer;
   margin: 0 1.5rem;
+  transition: background-color .3s ease;
+}
+.sidebar__theme:hover {
+  background-color: var(--lines-light);
+}
+.sidebar__theme:active {
+  transform: scale(0.98);
 }
 .sidebar__theme.dark {
   background-color: var(--bg-dark);
+}
+.sidebar__theme.dark:hover {
+  background-color: var(--darker-grey);
 }
 .sidebar__theme input {
   display: none;
@@ -390,6 +398,7 @@ body .app.dark {
   height: .75em;
   background-color: var(--white);
   border-radius: 50%;
+  transition: all .1s ease;
 }
 .sidebar__theme input:checked ~ .sidebar__theme--slider {
   background-color: var(--purple);
@@ -410,6 +419,10 @@ body .app.dark {
   margin: 1.5rem 0;
   gap: 1rem;
   user-select: none;
+  transition: all .2s ease;
+}
+.sidebar__hide:hover {
+  color: var(--purple);
 }
 
 .sidebar-mini {
@@ -427,6 +440,7 @@ body .app.dark {
   cursor: pointer;
   border: none;
   z-index: 3;
+  transition: all .2s ease;
 }
 .sidebar-mini:hover {
   width: 5rem;
@@ -515,7 +529,6 @@ body .app.dark {
 .column__tasks {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
   height: auto;
 }
 .column.drop-target {
@@ -553,7 +566,6 @@ body .app.dark {
   color: var(--medium-grey);
   cursor: pointer;
   padding: 1.5rem 1rem;
-  margin-top: 1.25rem;
   width: 100%;
 }
 .task-ghost:hover {
@@ -575,6 +587,13 @@ body .app.dark {
   width: 100%;
   cursor: pointer;
   position: relative;
+  margin-bottom: 1.25rem;
+}
+.task__card:active {
+  transform: scale(0.98);
+}
+.task__card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .task__card.dark {
   background-color: var(--dark-grey);
@@ -645,6 +664,8 @@ body .app.dark {
   max-height: 80dvh;
   overflow-y: auto;
   overflow-x: hidden;
+  transform-origin: center;
+  animation: slideIn 0.3s ease forwards;
 }
 
 .task-modal__content.dark {
@@ -695,9 +716,16 @@ body .app.dark {
   padding: .8rem;
   font: var(--body-m);
   cursor: pointer;
+  transition: all .3s ease;
+}
+.task-modal__content--subtasks--subtask:hover {
+  background-color: var(--purple-opacity25);
 }
 .task-modal__content--subtasks--subtask.dark {
   background-color: var(--bg-dark);
+}
+.task-modal__content--subtasks--subtask.dark:hover {
+  background-color: var(--purple-opacity25);
 }
 .checkbox {
   appearance: none;
@@ -816,4 +844,26 @@ textarea.error {
 
 * {
   /* border: 1px solid red; */
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdownOpen {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
