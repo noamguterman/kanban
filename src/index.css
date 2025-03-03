@@ -448,7 +448,7 @@ body .app.dark {
   opacity: 0;
   transition: opacity 0.5s ease;
   background-color: var(--lines-light);
-  border: none;
+  border: 1px dashed var(--purple);
   border-radius: 6px;
   height: 100dvh;
   width: 17.5rem;
@@ -468,7 +468,7 @@ body .app.dark {
   opacity: 0;
   transition: opacity 0.5s ease;
   background-color: var(--lines-light);
-  border: none;
+  border: 1px dashed var(--purple);
   border-radius: 8px;
   font: var(--heading-l);
   color: var(--medium-grey);
