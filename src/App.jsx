@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext } from 'react'
+import { useState, useEffect, createContext, useCallback } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -45,39 +45,6 @@ function App() {
   const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false)
   const [editBoardShouldAddColumn, setEditBoardShouldAddColumn] = useState(false)
   const [targetColumnName, setTargetColumnName] = useState(null)
-  const contextValue = {
-    darkMode,
-    boards,
-    currentBoard,
-    sidebarOpen,
-    activeTaskId,
-    isTaskModalOpen,
-    isAddTaskModalOpen,
-    isAddBoardModalOpen,
-    isEditBoardModalOpen,
-    setCurrentBoard,
-    updateTaskStatus,
-    updateSubtask,
-    toggleSidebar,
-    toggleDarkMode,
-    openTaskModal,
-    closeTaskModal,
-    handleHeaderMenuClick,
-    openAddTaskModal,
-    closeAddTaskModal,
-    targetColumnName,
-    openAddBoardModal,
-    closeAddBoardModal,
-    openEditBoardModal,
-    closeEditBoardModal,
-    editBoardShouldAddColumn,
-    resetEditBoardAddColumnFlag,
-    addNewTask,
-    addNewBoard,
-    updateBoard,
-    moveTask,
-    isHeaderMenuOpen
-  }
 
   useEffect(() => {
     const updatedCurrentBoard = boards.find(board => board.id === currentBoard.id)
@@ -275,7 +242,7 @@ function App() {
     setDarkMode(!darkMode)
   }
 
-  function moveTask(taskId, sourceColumnName, targetColumnName, targetIndex) {
+  const moveTask = useCallback((taskId, sourceColumnName, targetColumnName, targetIndex) => {
     setBoards(prevBoards => {
       return prevBoards.map(board => {
         if (board.id !== currentBoard.id) return board
@@ -302,7 +269,7 @@ function App() {
               return column
             })
           }
-        }
+      }
         
         // Find and remove the task from the source column
         let taskToMove = null
@@ -355,6 +322,40 @@ function App() {
         }
       })
     })
+  }, [currentBoard.id])
+
+  const contextValue = {
+    darkMode,
+    boards,
+    currentBoard,
+    sidebarOpen,
+    activeTaskId,
+    isTaskModalOpen,
+    isAddTaskModalOpen,
+    isAddBoardModalOpen,
+    isEditBoardModalOpen,
+    setCurrentBoard,
+    updateTaskStatus,
+    updateSubtask,
+    toggleSidebar,
+    toggleDarkMode,
+    openTaskModal,
+    closeTaskModal,
+    handleHeaderMenuClick,
+    openAddTaskModal,
+    closeAddTaskModal,
+    targetColumnName,
+    openAddBoardModal,
+    closeAddBoardModal,
+    openEditBoardModal,
+    closeEditBoardModal,
+    editBoardShouldAddColumn,
+    resetEditBoardAddColumnFlag,
+    addNewTask,
+    addNewBoard,
+    updateBoard,
+    moveTask,
+    isHeaderMenuOpen
   }
 
   return (

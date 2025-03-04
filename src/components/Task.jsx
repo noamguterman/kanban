@@ -102,7 +102,7 @@ function Task({ task, columnName, index }) {
     useEffect(() => {
         const dragDropRef = drag(drop(ref))
         return () => {
-            if (typeof dragDropRef?.disconnect === 'function') {
+            if (dragDropRef && typeof dragDropRef?.disconnect === 'function') {
                 dragDropRef.disconnect()
             }
         }
