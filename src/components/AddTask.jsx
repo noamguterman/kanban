@@ -9,6 +9,8 @@ function AddTask() {
     const { currentBoard, darkMode, addNewTask, closeAddTaskModal, targetColumnName } = useContext(BoardContext)
     const customStyles = getCustomStyles(darkMode)
     const [title, setTitle] = useState('')
+    const [titleError, setTitleError] = useState('')
+    const [subtaskError, setSubtaskError] = useState('')
     const [description, setDescription] = useState('')
     
     // Get a valid initial status - prefer targetColumnName, fallback to first column
@@ -62,21 +64,33 @@ function AddTask() {
         setSubtasks(subtasks.map(subtask => 
             subtask.id === id ? { ...subtask, title: value } : subtask
         ))
+        // Clear subtask error when the user types
+        if (subtaskError && value.trim()) {
+          setSubtaskError('')
+        }
     }
 
     function handleSubmit(e) {
         e.preventDefault()
         
-        // Validate inputs
-        if (!title.trim()) return
-
+        // Validate task title
+        if (!title.trim()) {
+            setTitleError('Task title cannot be empty')
+            return
+        }
+        
+        // If there are any subtasks and at least one is empty, show error.
+        if (subtasks.length > 0 && subtasks.some(sub => !sub.title.trim())) {
+            setSubtaskError('Subtask title cannot be empty')
+            return
+        }
+        
         // Ensure we have a valid status
         const finalStatus = status || defaultColumnName
-
-        // Filter out empty subtasks
+    
+        // Filter out (or keep) subtasks – if you want all subtasks to be non-empty, you might not filter here
         const filteredSubtasks = subtasks.filter(subtask => subtask.title.trim() !== '')
         
-        // Create new task object
         const newTask = {
             id: uuidv4(),
             title,
@@ -85,10 +99,7 @@ function AddTask() {
             subtasks: filteredSubtasks
         }
         
-        // Add the task to the board
         addNewTask(newTask)
-        
-        // Close the modal
         closeAddTaskModal()
     }
 
@@ -109,10 +120,13 @@ function AddTask() {
                             type="text"
                             placeholder="e.g. Take coffee break"
                             value={title}
-                            onChange={(e) => setTitle(e.target.value)}
+                            onChange={(e) => {
+                                setTitle(e.target.value)
+                                if (titleError) setTitleError('')
+                            }}
                             className={darkMode ? 'dark' : ''}
-                            required
                         />
+                        {titleError && <p className="form-error">{titleError}</p>}
                     </div>
                     
                     <div className="form-group">
@@ -136,7 +150,6 @@ function AddTask() {
                                     value={subtask.title}
                                     onChange={(e) => handleSubtaskChange(subtask.id, e.target.value)}
                                     className={darkMode ? 'dark' : ''}
-                                    required
                                 />
                                 <button 
                                     type="button" 
@@ -147,7 +160,7 @@ function AddTask() {
                                 </button>
                             </div>
                         ))}
-                        
+                        {subtaskError && <p className="form-error">{subtaskError}</p>}
                         <button 
                             type="button" 
                             className={`btn sm secondary ${darkMode ? 'dark' : ''}`}
