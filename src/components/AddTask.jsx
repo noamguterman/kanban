@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import Select from 'react-select'
 import CrossIcon from '../assets/icon-cross.svg?react'
@@ -14,6 +14,8 @@ function AddTask() {
     const [status, setStatus] = useState(initialStatus)
     const [subtasks, setSubtasks] = useState([])
 
+    const titleInputRef = useRef(null)
+
     const options = currentBoard.columns.map(column => ({
         value: column.name.toLowerCase(),
         label: column.name
@@ -21,6 +23,10 @@ function AddTask() {
 
     useEffect(() => {
         document.body.classList.add('modal-open')
+
+        if (titleInputRef.current) {
+            titleInputRef.current.focus()
+        }
         
         return () => {
           document.body.classList.remove('modal-open')
@@ -85,6 +91,7 @@ function AddTask() {
                     <div className="form-group">
                         <label>Title</label>
                         <input 
+                            ref={titleInputRef}
                             type="text"
                             placeholder="e.g. Take coffee break"
                             value={title}
