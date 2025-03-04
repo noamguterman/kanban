@@ -7,6 +7,7 @@ function AddBoard() {
     const { darkMode, closeAddBoardModal, addNewBoard, boards } = useContext(BoardContext)
     const [name, setName] = useState('')
     const [nameError, setNameError] = useState('')
+    const [columnNameError, setColumnNameError] = useState('')
     const [columns, setColumns] = useState([
         { id: uuidv4(), name: 'Todo', color: 'color1' },
         { id: uuidv4(), name: 'Doing', color: 'color2' }
@@ -90,6 +91,10 @@ function AddBoard() {
         setColumns(columns.map(column => 
             column.id === id ? { ...column, name: value } : column
         ))
+
+        if (columnNameError && value.trim()) {
+            setColumnNameError('')
+        }
     }
 
     function handleSubmit(e) {
@@ -108,6 +113,11 @@ function AddBoard() {
         
         if (isDuplicate) {
             setNameError('A board with this name already exists')
+            return
+        }
+
+        if (columns.some(column => !column.name.trim())) {
+            setColumnNameError('Column name cannot be empty')
             return
         }
         
@@ -160,8 +170,7 @@ function AddBoard() {
                                     placeholder="e.g. Todo"
                                     value={column.name}
                                     onChange={(e) => handleColumnNameChange(column.id, e.target.value)}
-                                    className={darkMode ? 'dark' : ''}
-                                    required
+                                    className={`${darkMode ? 'dark' : ''} ${columnNameError && !column.name.trim() ? 'error' : ''}`}
                                     ref={index === columns.length - 1 ? newColumnInputRef : null}
                                 />
                                 <button 
@@ -173,6 +182,9 @@ function AddBoard() {
                                 </button>
                             </div>
                         ))}
+                        {columnNameError && (
+                            <p className="form-error">{columnNameError}</p>
+                        )}
                         
                         <button 
                             type="button" 
