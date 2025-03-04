@@ -38,7 +38,7 @@ function Main() {
                     <>
                         {columns}
                         <button 
-                            className={`column-ghost ${darkMode ? 'dark' : ''}`}
+                            className={`column-ghost ${columns.length >= 5 ? 'hidden' : ''} ${darkMode ? 'dark' : ''}`}
                             onClick={() => openEditBoardModal(true)}
                         >
                             + New Column

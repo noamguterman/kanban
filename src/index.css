@@ -599,11 +599,11 @@ body .app.dark {
   position: relative;
   margin-bottom: 1.25rem;
 }
-.task__card:active {
-  transform: scale(0.98);
-}
 .task__card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.task__card:active {
+  transform: scale(0.98);
 }
 .task__card.dark {
   background-color: var(--dark-grey);
