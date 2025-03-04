@@ -321,6 +321,15 @@ body .app.dark {
   font: var(--heading-m);
   border-radius: 0 2rem 2rem 0;
 }
+.sidebar__boards--board.dark:hover {
+  background-color: var(--purple-opacity10);
+}
+.sidebar__boards--board.dark:hover .sidebar__boards--board--name {
+  color: var(--white);
+} 
+.sidebar__boards--board.dark:hover .sidebar__boards--board--icon {
+  color: var(--white);
+}
 .sidebar__boards--board:active .sidebar__boards--board--name {
   transform: scale(0.98);
 }
@@ -350,6 +359,9 @@ body .app.dark {
 .sidebar__boards--board.active .sidebar__boards--board--icon {
   color: var(--white);
 }
+.sidebar__boards--board.dark.active {
+  background-color: var(--purple);
+}
 .sidebar__boards--board.new .sidebar__boards--board--name {
   color: var(--purple);
 }
@@ -366,6 +378,12 @@ body .app.dark {
 .sidebar__boards--board.new:hover {
   background-color: inherit;
   border: 1px dashed var(--purple);
+}
+.sidebar__boards--board.new.dark:hover .sidebar__boards--board--name {
+  color: var(--purple);
+}
+.sidebar__boards--board.new.dark:hover .sidebar__boards--board--icon {
+  color: var(--purple);
 }
 .sidebar__theme {
   background-color: var(--bg-light);
@@ -458,6 +476,7 @@ body .app.dark {
 }
 .sidebar-mini:hover {
   width: 5rem;
+  background-color: var(--purple-hover);
 }
 .sidebar-mini__icon {
   margin-right: .6rem;
@@ -605,6 +624,9 @@ body .app.dark {
 }
 .task__card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.task__card:hover .task__card--title {
+  color: var(--purple);
 }
 .task__card:active {
   transform: scale(0.98);
