@@ -34,22 +34,22 @@ function Header() {
     }, [isHeaderMenuOpen, handleHeaderMenuClick])
 
     return (
-        <header className={`header ${darkMode ? 'dark' : ''}`}>
+        <header className={`header ${!currentBoard.name && sidebarOpen ? 'hidden' : ''} ${darkMode ? 'dark' : ''}`}>
             <div className='header__left'>
                 {!sidebarOpen && 
-                    (<div className={`header__logo ${darkMode ? 'dark' : ''}`}>
+                    (<div className={`header__logo ${!currentBoard.name ? 'empty' : ''} ${darkMode ? 'dark' : ''}`}>
                         {darkMode ? <LogoLight alt='Logo' /> : <LogoDark alt='Logo' />}
                     </div>)}
                 <h1>{currentBoard.name}</h1>
             </div>
             <div className='header__right'>
                 <button 
-                    className='btn lg primary' 
+                    className={`btn lg primary ${currentBoard.columns.length === 0 ? 'hidden' : ''}`}
                     onClick={() => openAddTaskModal()}>
                         Add New Task
                 </button>
                 <button 
-                    className='header__menu' 
+                    className={`header__menu ${!currentBoard.name ? 'hidden' : ''}`} 
                     onClick={handleHeaderMenuClick}
                     ref={buttonRef}
                 >

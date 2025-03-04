@@ -64,6 +64,10 @@
   scrollbar-width: thin;
 }
 
+.hidden {
+  display: none !important;
+}
+
 html {
   overflow-y: hidden;
   overflow-x: auto;
@@ -165,6 +169,7 @@ body .app.dark {
   left: 0;
   right: 0;
   z-index: 2;
+  min-height: 5.9rem;
 }
 
 .app.sidebar-open .header {
@@ -190,6 +195,9 @@ body .app.dark {
   left: 11.6rem;
   width: 1px;
   background-color: var(--lines-light);
+}
+.header__logo.empty::after {
+  display: none;
 }
 .header__logo.dark::after {
   background-color: var(--lines-dark);
