@@ -10,8 +10,16 @@ function Column({ column }) {
 
     const [{ isOver }, drop] = useDrop(() => ({
         accept: 'task',
+        hover: (item, monitor) => {
+            // Optional hover feedback for empty columns
+            if (column.tasks.length === 0) {
+                if (columnRef.current) {
+                    columnRef.current.classList.add('drop-target')
+                }
+            }
+        },
         drop: (item, monitor) => {
-            if (item.columnName === column.name) {
+            if (item.columnName === column.name && column.tasks.length > 0) {
                 return
             }
             
@@ -35,12 +43,17 @@ function Column({ column }) {
             }
             
             moveTask(item.id, item.columnName, column.name, targetIndex)
+
+            // Clear hover style
+            if (columnRef.current) {
+                columnRef.current.classList.remove('drop-target')
+            }
         },
         collect: (monitor) => ({
             isOver: !!monitor.isOver(),
             canDrop: !!monitor.canDrop()
         })
-    }))
+    }), [column.name, column.tasks.length, moveTask])
 
     drop(columnRef)
     

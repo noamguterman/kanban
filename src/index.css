@@ -313,7 +313,7 @@ body .app.dark {
   font: var(--heading-m);
   border-radius: 0 2rem 2rem 0;
 }
-.sidebar__boards--board--name:active {
+.sidebar__boards--board:active .sidebar__boards--board--name {
   transform: scale(0.98);
 }
 .sidebar__boards--board:hover {
@@ -345,11 +345,15 @@ body .app.dark {
   color: var(--purple);
 }
 .sidebar__boards--board.new {
-  transition: all .3s ease;
+  transition: all .5s ease;
+  border: 1px dashed transparent;
+  position: relative;
+  top: -1px;
+  left: -1px;
 }
 .sidebar__boards--board.new:hover {
   background-color: inherit;
-  transform: scale(.98);
+  border: 1px dashed var(--purple);
 }
 .sidebar__theme {
   background-color: var(--bg-light);
@@ -361,7 +365,6 @@ body .app.dark {
   gap: 1.5em;
   cursor: pointer;
   margin: 0 1.5rem;
-  transition: background-color .1s ease;
 }
 .sidebar__theme:hover {
   background-color: var(--lines-light);
@@ -610,10 +613,15 @@ body .app.dark {
   color: var(--medium-grey);
 }
 .task__card.dragging {
-  cursor: grabbing;
-  opacity: 0.7 !important;
-  transform: scale(0.95);
-  z-index: 10;
+  cursor: grabbing !important;
+  opacity: 0.5 !important;
+  transform: scale(0.95) !important;
+  background-color: var(--purple-opacity10) !important;
+  border: 1px dashed var(--purple) !important;
+  box-shadow: none !important;
+  z-index: 100 !important;
+  pointer-events: none !important;
+  transition: none !important;
 }
 .task__card.drop-above::before {
   content: '';

@@ -279,6 +279,30 @@ function App() {
     setBoards(prevBoards => {
       return prevBoards.map(board => {
         if (board.id !== currentBoard.id) return board
+
+        // Same column reordering case
+        if (sourceColumnName === targetColumnName) {
+          return {
+            ...board,
+            columns: board.columns.map(column => {
+              if (column.name === sourceColumnName) {
+                const tasks = [...column.tasks]
+                const taskToMove = tasks.find(task => task.id === taskId)
+                if (!taskToMove) return column;
+                
+                // Remove task from current position
+                const sourceIndex = tasks.findIndex(task => task.id === taskId)
+                tasks.splice(sourceIndex, 1)
+                
+                // Insert at new position
+                tasks.splice(targetIndex, 0, taskToMove)
+                
+                return { ...column, tasks }
+              }
+              return column
+            })
+          }
+        }
         
         // Find and remove the task from the source column
         let taskToMove = null
