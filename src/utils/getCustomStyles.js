@@ -21,7 +21,7 @@ export const getCustomStyles = (darkMode) => ({
             : isFocused 
                 ? 'var(--purple)'
                 : darkMode 
-                    ? 'var(--dark-grey)'
+                    ? 'var(--bg-dark)'
                     : 'var(--white)',
                     color: isSelected 
                     ? 'var(--medium-grey)' 
@@ -38,7 +38,7 @@ export const getCustomStyles = (darkMode) => ({
     }),
     menu: (styles) => ({
         ...styles,
-        backgroundColor: darkMode ? 'var(--dark-grey)' : 'var(--white)',
+        backgroundColor: darkMode ? 'var(--bg-dark)' : 'var(--white)',
         marginTop: '0.5rem',
         padding: 0,
         borderRadius: '8px',
