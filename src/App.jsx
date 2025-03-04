@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useCallback } from 'react'
+import { useState, useEffect, createContext, useCallback, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -47,18 +47,23 @@ function App() {
   const [isDeleteBoardModalOpen, setIsDeleteBoardModalOpen] = useState(false)
   const [editBoardShouldAddColumn, setEditBoardShouldAddColumn] = useState(false)
   const [targetColumnName, setTargetColumnName] = useState(null)
+  const manualBoardSelection = useRef(false)
 
   useEffect(() => {
+    // If we did a manual selection, reset the flag and skip this effect
+    if (manualBoardSelection.current) {
+      manualBoardSelection.current = false
+      return
+    }
+  
     const updatedCurrentBoard = boards.find(board => currentBoard && board.id === currentBoard.id)
     
     if (updatedCurrentBoard) {
       setCurrentBoard(updatedCurrentBoard)
     } else if (boards.length > 0) {
-      // If current board was deleted, select the first available board
       setCurrentBoard(boards[0])
     } else {
-      // If there are no boards left, set currentBoard to null
-      setCurrentBoard(null)
+      setCurrentBoard(null);
     }
   }, [boards])
 
@@ -71,14 +76,15 @@ function App() {
   }, [darkMode])
 
   function openAddTaskModal(columnName = null) {
-    setIsAddTaskModalOpen(true)
-    
     if (columnName) {
       setTargetColumnName(columnName)
     } else {
-      setTargetColumnName(null)
+      const defaultColumn = currentBoard?.columns[0]?.name || null
+      setTargetColumnName(defaultColumn)
     }
+    setIsAddTaskModalOpen(true)
   }
+
   function closeAddTaskModal() {
     setIsAddTaskModalOpen(false)
     setTargetColumnName(null)
@@ -95,6 +101,7 @@ function App() {
   function openAddBoardModal() {
     setIsAddBoardModalOpen(true)
   }
+
   function closeAddBoardModal() {
     setIsAddBoardModalOpen(false)
   }
@@ -102,6 +109,7 @@ function App() {
   function openDeleteBoardModal() {
     setIsDeleteBoardModalOpen(true)
   }
+
   function closeDeleteBoardModal() {
     setIsDeleteBoardModalOpen(false)
   }
@@ -110,6 +118,7 @@ function App() {
     setActiveTaskId(taskId)
     setIsTaskModalOpen(true)
   }
+
   function closeTaskModal() {
     setIsTaskModalOpen(false)
     setActiveTaskId(null)
@@ -124,10 +133,12 @@ function App() {
     }
     setIsHeaderMenuOpen(false)
   }
+
   function closeEditBoardModal() {
     setIsEditBoardModalOpen(false)
     setEditBoardShouldAddColumn(false)
   }
+
   function updateBoard(updatedBoard) {
     setBoards(prevBoards => {
       return prevBoards.map(board => 
@@ -137,13 +148,22 @@ function App() {
 
     setCurrentBoard(updatedBoard)
   }
+
   function resetEditBoardAddColumnFlag() {
     setEditBoardShouldAddColumn(false)
-}
+  }
   
   function addNewTask(newTask) {
     if (!currentBoard) return
-
+    
+    // Ensure task has a valid status (column name)
+    if (!newTask.status && currentBoard.columns.length > 0) {
+      newTask = {
+        ...newTask,
+        status: currentBoard.columns[0].name
+      }
+    }
+  
     setBoards(prevBoards => {
       return prevBoards.map(board => {
         if (board.id !== currentBoard.id) return board
@@ -165,24 +185,29 @@ function App() {
   }
 
   function addNewBoard(newBoard) {
-    setBoards(prevBoards => {
-      return [
-        ...prevBoards,
-        {
-          ...newBoard,
-          id: uuidv4(),
-          columns: newBoard.columns.map(column => ({
-            ...column,
-            id: uuidv4(),
-            tasks: []
-          }))
-        }
-      ]
-    })}
+    // Create the new board with proper IDs
+    const newBoardWithId = {
+      ...newBoard,
+      id: uuidv4(),
+      columns: newBoard.columns.map(column => ({
+        ...column,
+        id: uuidv4(),
+        tasks: []
+      }))
+    }
+    
+    // Update boards state
+    setBoards(prevBoards => [...prevBoards, newBoardWithId])
+    
+    // Set the new board as the current board
+    // Set the flag to prevent the useEffect from overriding our selection
+    manualBoardSelection.current = true
+    setCurrentBoard(newBoardWithId)
+  }
 
   function updateTaskStatus(taskId, newStatus) {
     if (!currentBoard) return
-    
+
     const currentActiveTaskId = activeTaskId
 
     setBoards(prevBoards => {
@@ -220,7 +245,7 @@ function App() {
       setActiveTaskId(taskId);
       setIsTaskModalOpen(true);
   }
-}
+  }
   
   function updateSubtask(taskId, subtaskIndex) {
     if (!currentBoard) return
@@ -253,18 +278,34 @@ function App() {
   }
 
   function deleteBoard(boardId) {
+    // Find the index of the board being deleted
+    const boardIndex = boards.findIndex(board => board.id === boardId)
+    
+    if (boardIndex === -1) return // Board not found
+    
+    // Create a new array without the deleted board
     const filteredBoards = boards.filter(board => board.id !== boardId)
     
-    // Update boards state first
+    // Flag that we're manually selecting a board
+    manualBoardSelection.current = true
+    
+    // Update boards state
     setBoards(filteredBoards)
     
-    // Check if there are any boards left
-    if (filteredBoards.length > 0) {
-      // If there are boards remaining, set the first one as current
+    // If there are no boards left, set currentBoard to null
+    if (filteredBoards.length === 0) {
+      setCurrentBoard(null)
+      return
+    }
+    
+    // Logic to select the nearest board before the deleted one if possible
+    if (boardIndex === 0) {
+      // If the first board was deleted, select the new first board
       setCurrentBoard(filteredBoards[0])
     } else {
-      // If no boards are left, set currentBoard to null
-      setCurrentBoard(null)
+      // Otherwise, select the board before the one that was deleted
+      // This will select boardIndex - 1, which is the previous board
+      setCurrentBoard(filteredBoards[boardIndex - 1])
     }
   }
 

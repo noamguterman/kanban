@@ -10,16 +10,23 @@ function AddTask() {
     const customStyles = getCustomStyles(darkMode)
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
-    const initialStatus = targetColumnName || currentBoard.columns[0]?.name || ''
-    const [status, setStatus] = useState(initialStatus)
+    
+    // Get a valid initial status - prefer targetColumnName, fallback to first column
+    const defaultColumnName = currentBoard?.columns[0]?.name || ''
+    const [status, setStatus] = useState(targetColumnName || defaultColumnName)
     const [subtasks, setSubtasks] = useState([])
 
     const titleInputRef = useRef(null)
 
+    // Generate options for the Select dropdown
     const options = currentBoard.columns.map(column => ({
         value: column.name.toLowerCase(),
         label: column.name
     }))
+
+    useEffect(() => {
+        setStatus(targetColumnName || defaultColumnName)
+    }, [targetColumnName, defaultColumnName]);
 
     useEffect(() => {
         document.body.classList.add('modal-open')
@@ -29,9 +36,9 @@ function AddTask() {
         }
         
         return () => {
-          document.body.classList.remove('modal-open')
+            document.body.classList.remove('modal-open')
         }
-      }, [])
+    }, [])
 
     function handleStatusChange(selectedOption) {
         setStatus(selectedOption.label)
@@ -63,6 +70,9 @@ function AddTask() {
         // Validate inputs
         if (!title.trim()) return
 
+        // Ensure we have a valid status
+        const finalStatus = status || defaultColumnName
+
         // Filter out empty subtasks
         const filteredSubtasks = subtasks.filter(subtask => subtask.title.trim() !== '')
         
@@ -71,7 +81,7 @@ function AddTask() {
             id: uuidv4(),
             title,
             description,
-            status,
+            status: finalStatus,
             subtasks: filteredSubtasks
         }
         
@@ -81,6 +91,10 @@ function AddTask() {
         // Close the modal
         closeAddTaskModal()
     }
+
+    // Find the current selected option for the dropdown
+    const selectedOption = options.find(option => option.label === status) || 
+                          (options.length > 0 ? options[0] : null)
 
     return (
         <div className="task-modal" onClick={handleBackdropClick}>
@@ -147,7 +161,7 @@ function AddTask() {
                         <label>Status</label>
                         <Select 
                             options={options}
-                            value={options.find(option => option.label === status) || options[0]}
+                            value={selectedOption}
                             onChange={handleStatusChange}
                             styles={{
                                 ...customStyles,

@@ -45,7 +45,7 @@ function Header() {
             <div className='header__right'>
                 <button 
                     className='btn lg primary' 
-                    onClick={openAddTaskModal}>
+                    onClick={() => openAddTaskModal()}>
                         Add New Task
                 </button>
                 <button 
