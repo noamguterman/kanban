@@ -5,7 +5,7 @@ import { useContext, useRef, useEffect } from 'react'
 import { BoardContext } from '../App'
 
 function Header() {
-    const { darkMode, currentBoard, sidebarOpen, openAddTaskModal, handleHeaderMenuClick, isHeaderMenuOpen, openEditBoardModal } = useContext(BoardContext)
+    const { darkMode, currentBoard, sidebarOpen, openAddTaskModal, handleHeaderMenuClick, isHeaderMenuOpen, openEditBoardModal, openDeleteBoardModal } = useContext(BoardContext)
     const menuRef = useRef(null)
     const buttonRef = useRef(null)
 
@@ -61,7 +61,7 @@ function Header() {
                         ref={menuRef}
                     >
                         <button className={`btn-edit ${darkMode ? 'dark' : ''}`} onClick={() => openEditBoardModal(false)}>Edit Board</button>
-                        <button className={`btn-delete ${darkMode ? 'dark' : ''}`}>Delete Board</button>
+                        <button className={`btn-delete ${darkMode ? 'dark' : ''}`} onClick={openDeleteBoardModal}>Delete Board</button>
                     </div>
                 )}
             </div>

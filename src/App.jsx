@@ -10,6 +10,7 @@ import Main from './components/Main'
 import AddTask from './components/AddTask'
 import AddBoard from './components/AddBoard'
 import EditBoard from './components/EditBoard'
+import DeleteBoard from './components/DeleteBoard'
 
 function addIdsToData(boards) {
   return boards.map(board => ({
@@ -43,17 +44,21 @@ function App() {
   const [isAddBoardModalOpen, setIsAddBoardModalOpen] = useState(false)
   const [isEditBoardModalOpen, setIsEditBoardModalOpen] = useState(false)
   const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false)
+  const [isDeleteBoardModalOpen, setIsDeleteBoardModalOpen] = useState(false)
   const [editBoardShouldAddColumn, setEditBoardShouldAddColumn] = useState(false)
   const [targetColumnName, setTargetColumnName] = useState(null)
 
   useEffect(() => {
-    const updatedCurrentBoard = boards.find(board => board.id === currentBoard.id)
+    const updatedCurrentBoard = boards.find(board => currentBoard && board.id === currentBoard.id)
     
     if (updatedCurrentBoard) {
       setCurrentBoard(updatedCurrentBoard)
     } else if (boards.length > 0) {
       // If current board was deleted, select the first available board
       setCurrentBoard(boards[0])
+    } else {
+      // If there are no boards left, set currentBoard to null
+      setCurrentBoard(null)
     }
   }, [boards])
 
@@ -93,6 +98,13 @@ function App() {
   function closeAddBoardModal() {
     setIsAddBoardModalOpen(false)
   }
+
+  function openDeleteBoardModal() {
+    setIsDeleteBoardModalOpen(true)
+  }
+  function closeDeleteBoardModal() {
+    setIsDeleteBoardModalOpen(false)
+  }
   
   function openTaskModal(taskId) {
     setActiveTaskId(taskId)
@@ -130,6 +142,8 @@ function App() {
 }
   
   function addNewTask(newTask) {
+    if (!currentBoard) return
+
     setBoards(prevBoards => {
       return prevBoards.map(board => {
         if (board.id !== currentBoard.id) return board
@@ -167,6 +181,8 @@ function App() {
     })}
 
   function updateTaskStatus(taskId, newStatus) {
+    if (!currentBoard) return
+    
     const currentActiveTaskId = activeTaskId
 
     setBoards(prevBoards => {
@@ -207,6 +223,8 @@ function App() {
 }
   
   function updateSubtask(taskId, subtaskIndex) {
+    if (!currentBoard) return
+
     setBoards(prevBoards => {
         const newBoards = prevBoards.map(board => {
             if (board.id === currentBoard.id) {
@@ -234,6 +252,22 @@ function App() {
     })
   }
 
+  function deleteBoard(boardId) {
+    const filteredBoards = boards.filter(board => board.id !== boardId)
+    
+    // Update boards state first
+    setBoards(filteredBoards)
+    
+    // Check if there are any boards left
+    if (filteredBoards.length > 0) {
+      // If there are boards remaining, set the first one as current
+      setCurrentBoard(filteredBoards[0])
+    } else {
+      // If no boards are left, set currentBoard to null
+      setCurrentBoard(null)
+    }
+  }
+
   function toggleSidebar() {
     setSidebarOpen(!sidebarOpen)
   }
@@ -243,6 +277,8 @@ function App() {
   }
 
   const moveTask = useCallback((taskId, sourceColumnName, targetColumnName, targetIndex) => {
+    if (!currentBoard) return
+    
     setBoards(prevBoards => {
       return prevBoards.map(board => {
         if (board.id !== currentBoard.id) return board
@@ -322,18 +358,19 @@ function App() {
         }
       })
     })
-  }, [currentBoard.id])
+  }, [currentBoard?.id])
 
   const contextValue = {
     darkMode,
     boards,
-    currentBoard,
+    currentBoard: currentBoard || { id: null, name: "", columns: [] },
     sidebarOpen,
     activeTaskId,
     isTaskModalOpen,
     isAddTaskModalOpen,
     isAddBoardModalOpen,
     isEditBoardModalOpen,
+    isDeleteBoardModalOpen,
     setCurrentBoard,
     updateTaskStatus,
     updateSubtask,
@@ -347,6 +384,8 @@ function App() {
     targetColumnName,
     openAddBoardModal,
     closeAddBoardModal,
+    openDeleteBoardModal,
+    closeDeleteBoardModal,
     openEditBoardModal,
     closeEditBoardModal,
     editBoardShouldAddColumn,
@@ -355,7 +394,8 @@ function App() {
     addNewBoard,
     updateBoard,
     moveTask,
-    isHeaderMenuOpen
+    isHeaderMenuOpen,
+    deleteBoard
   }
 
   return (
@@ -371,6 +411,7 @@ function App() {
           {isAddTaskModalOpen && <AddTask />}
           {isAddBoardModalOpen && <AddBoard />}
           {isEditBoardModalOpen && <EditBoard />}
+          {isDeleteBoardModalOpen && <DeleteBoard />}
         </div>
       </BoardContext.Provider>
     </DndProvider>

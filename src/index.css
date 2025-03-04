@@ -852,6 +852,32 @@ textarea.error {
   border-color: var(--red) !important;
 }
 
+/* Delete modal styles */
+.task-modal__content.delete-modal {
+  width: 30rem;
+  padding: 2rem;
+}
+
+.delete-title {
+  color: var(--red);
+}
+
+.delete-message {
+  font: var(--body-l);
+  color: var(--medium-grey);
+  margin: 0;
+  /* margin-bottom: 1.5rem; */
+}
+
+.delete-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.delete-actions .btn {
+  flex: 1;
+}
+
 * {
   /* border: 1px solid red; */
 }
