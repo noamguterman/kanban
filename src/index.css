@@ -547,6 +547,9 @@ body .app.dark {
   cursor: pointer;
   transition: transform 0.2s ease;
 }
+.column__dot.modal {
+  width: 16px;
+}
 .column__dot:active {
   transform: scale(0.9);
 }
@@ -926,6 +929,8 @@ textarea.error {
 }
 
 .input-container {
+  display: flex;
+  align-items: center;
   position: relative;
   width: 100%;
 }

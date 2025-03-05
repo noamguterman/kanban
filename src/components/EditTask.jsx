@@ -22,7 +22,7 @@ function EditTask() {
   const [titleError, setTitleError] = useState('')
   const [description, setDescription] = useState(currentTask?.description || '')
   const [subtasks, setSubtasks] = useState(currentTask?.subtasks || [])
-  const [subtaskErrors, setSubtaskErrors] = useState('')
+  const [subtaskErrors, setSubtaskErrors] = useState({})
   const [status, setStatus] = useState(currentTask?.status || currentBoard.columns[0]?.name || '')
   const customStyles = getCustomStyles(darkMode)
   // Generate status options from board columns

@@ -15,7 +15,7 @@ function EditBoard() {
       tasks: col.tasks
     }))
   )
-  const [columnNameError, setColumnNameError] = useState('')
+  const [columnErrors, setColumnErrors] = useState({})
   const newColumnInputRef = useRef(null)
   const shouldFocusNewColumn = useRef(false)
 
@@ -76,6 +76,11 @@ function EditBoard() {
 
   function handleRemoveColumn(id) {
     setColumns(columns.filter(column => column.id !== id))
+    setColumnErrors(prevErrors => {
+      const newErrors = { ...prevErrors }
+      delete newErrors[id]
+      return newErrors
+    })
   }
 
   function handleColumnNameChange(id, value) {
@@ -84,36 +89,42 @@ function EditBoard() {
         column.id === id ? { ...column, name: value } : column
       )
     )
-    if (columnNameError && value.trim()) {
-      setColumnNameError('')
-    }
+    setColumnErrors(prevErrors => {
+      const newErrors = { ...prevErrors }
+      if (value.trim()) {
+        delete newErrors[id]
+      }
+      return newErrors
+    })
   }
 
   function handleSubmit(e) {
     e.preventDefault()
-    const trimmedName = name.trim()
-    if (!trimmedName) {
-      setNameError('Board name cannot be empty')
-      return
+
+    let hasError = false
+
+    if (!name.trim()) {
+      setNameError(`Can't be empty`)
+      hasError = true
+    } else {
+      setNameError('')
     }
 
-    const isDuplicate = boards.some(board => 
-      board.id !== currentBoard.id &&
-      board.name.toLowerCase() === trimmedName.toLowerCase()
-    )
-    if (isDuplicate) {
-      setNameError('A board with this name already exists')
-      return
-    }
+    const newColumnErrors = {}
+    columns.forEach(column => {
+      if (!column.name.trim()) {
+        newColumnErrors[column.id] = `Can't be empty`
+        hasError = true
+      }
+    })
 
-    if (columns.some(column => !column.name.trim())) {
-      setColumnNameError('Column name cannot be empty')
-      return
-    }
+    setColumnErrors(newColumnErrors)
+
+    if (hasError) return
 
     const updatedBoard = {
       ...currentBoard,
-      name: trimmedName,
+      name: name.trim(),
       columns: columns.map(col => {
         const existingColumn = currentBoard.columns.find(c => c.id === col.id)
         return { ...col, tasks: existingColumn ? existingColumn.tasks : [] }
@@ -131,36 +142,41 @@ function EditBoard() {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Name</label>
-            <input 
-              type="text"
-              placeholder="e.g. Web Design"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value)
-                if (nameError) setNameError('')
-              }}
-              className={`${darkMode ? 'dark' : ''} ${nameError ? 'error' : ''}`}
-            />
-            {nameError && <p className="form-error">{nameError}</p>}
+            <div className='input-container'>
+              <input 
+                type="text"
+                placeholder="e.g. Web Design"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value)
+                  if (nameError) setNameError('')
+                }}
+                className={`${darkMode ? 'dark' : ''} ${nameError ? 'error' : ''}`}
+              />
+              {nameError && <span className="inline-error">{nameError}</span>}
+            </div>
           </div>
           <div className="form-group">
             <label>Columns</label>
             {columns.map((column, index) => (
-              <div key={column.id} className="subtask-input">
+            <div key={column.id} className="subtask-input">
                 <button
                   type="button"
-                  className={`column__dot ${column.color}`}
+                  className={`column__dot modal ${column.color}`}
                   onClick={() => handleColorChange(column.id)}
                   title="Click to change column color"
                 ></button>
-                <input 
-                  type="text"
-                  placeholder="e.g. Todo"
-                  value={column.name}
-                  onChange={(e) => handleColumnNameChange(column.id, e.target.value)}
-                  className={`${darkMode ? 'dark' : ''} ${columnNameError && !column.name.trim() ? 'error' : ''}`}
-                  ref={index === columns.length - 1 ? newColumnInputRef : null}
-                />
+                <div className='input-container'>
+                  <input 
+                    type="text"
+                    placeholder="e.g. Todo"
+                    value={column.name}
+                    onChange={(e) => handleColumnNameChange(column.id, e.target.value)}
+                    className={`${darkMode ? 'dark' : ''} ${columnErrors[column.id] ? 'error' : ''}`}
+                    ref={index === columns.length - 1 ? newColumnInputRef : null}
+                  />
+                  {columnErrors[column.id] && <span className="inline-error">{columnErrors[column.id]}</span>}
+                </div>
                 <button
                   type="button"
                   className="remove-subtask"
@@ -170,7 +186,6 @@ function EditBoard() {
                 </button>
               </div>
             ))}
-            {columnNameError && <p className="form-error">{columnNameError}</p>}
             <button
               type="button"
               className={`btn sm secondary ${darkMode ? 'dark' : ''}`}

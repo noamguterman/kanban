@@ -10,7 +10,7 @@ function AddTask() {
     const customStyles = getCustomStyles(darkMode)
     const [title, setTitle] = useState('')
     const [titleError, setTitleError] = useState('')
-    const [subtaskError, setSubtaskError] = useState('')
+    const [subtaskErrors, setSubtaskErrors] = useState({})
     const [description, setDescription] = useState('')
     
     // Get a valid initial status - prefer targetColumnName, fallback to first column
@@ -32,11 +32,9 @@ function AddTask() {
 
     useEffect(() => {
         document.body.classList.add('modal-open')
-
         if (titleInputRef.current) {
             titleInputRef.current.focus()
         }
-        
         return () => {
             document.body.classList.remove('modal-open')
         }
@@ -58,52 +56,64 @@ function AddTask() {
 
     function handleRemoveSubtask(id) {
         setSubtasks(subtasks.filter(subtask => subtask.id !== id))
+        setSubtaskErrors(prevErrors => {
+            const newErrors = { ...prevErrors }
+            delete newErrors[id]
+            return newErrors
+        })
     }
 
     function handleSubtaskChange(id, value) {
-        setSubtasks(subtasks.map(subtask => 
-            subtask.id === id ? { ...subtask, title: value } : subtask
-        ))
-        // Clear subtask error when the user types
-        if (subtaskError && value.trim()) {
-          setSubtaskError('')
+    setSubtasks(subtasks.map(subtask => 
+        subtask.id === id ? { ...subtask, title: value } : subtask
+    ))
+    setSubtaskErrors(prevErrors => {
+        const newErrors = { ...prevErrors }
+        if (value.trim()) {
+        delete newErrors[id]
         }
+        return newErrors
+    })
     }
 
     function handleSubmit(e) {
-        e.preventDefault()
-        
-        // Validate task title
-        if (!title.trim()) {
-            setTitleError('Task title cannot be empty')
-            return
-        }
-        
-        // If there are any subtasks and at least one is empty, show error.
-        if (subtasks.length > 0 && subtasks.some(sub => !sub.title.trim())) {
-            setSubtaskError('Subtask title cannot be empty')
-            return
-        }
-        
-        // Ensure we have a valid status
-        const finalStatus = status || defaultColumnName
-    
-        // Filter out (or keep) subtasks – if you want all subtasks to be non-empty, you might not filter here
-        const filteredSubtasks = subtasks.filter(subtask => subtask.title.trim() !== '')
-        
-        const newTask = {
-            id: uuidv4(),
-            title,
-            description,
-            status: finalStatus,
-            subtasks: filteredSubtasks
-        }
-        
-        addNewTask(newTask)
-        closeAddTaskModal()
+    e.preventDefault()
+
+    let hasError = false
+
+    if (!title.trim()) {
+        setTitleError(`Can't be empty`)
+        hasError = true
+    } else {
+        setTitleError('')
     }
 
-    // Find the current selected option for the dropdown
+    const newSubtaskErrors = {}
+    subtasks.forEach(subtask => {
+        if (!subtask.title.trim()) {
+        newSubtaskErrors[subtask.id] = `Can't be empty`
+        hasError = true
+        }
+    })
+
+    setSubtaskErrors(newSubtaskErrors)
+
+    if (hasError) return
+
+    const finalStatus = status || defaultColumnName
+
+    const newTask = {
+        id: uuidv4(),
+        title: title.trim(),
+        description,
+        status: finalStatus,
+        subtasks
+    }
+
+    addNewTask(newTask)
+    closeAddTaskModal()
+    }
+
     const selectedOption = options.find(option => option.label === status) || 
                           (options.length > 0 ? options[0] : null)
 
@@ -115,18 +125,20 @@ function AddTask() {
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>Title</label>
-                        <input 
-                            ref={titleInputRef}
-                            type="text"
-                            placeholder="e.g. Take coffee break"
-                            value={title}
-                            onChange={(e) => {
-                                setTitle(e.target.value)
-                                if (titleError) setTitleError('')
-                            }}
-                            className={darkMode ? 'dark' : ''}
-                        />
-                        {titleError && <p className="form-error">{titleError}</p>}
+                        <div className='input-container'>
+                            <input 
+                                ref={titleInputRef}
+                                type="text"
+                                placeholder="e.g. Take coffee break"
+                                value={title}
+                                onChange={(e) => {
+                                    setTitle(e.target.value)
+                                    if (titleError) setTitleError('')
+                                }}
+                                className={`${darkMode ? 'dark' : ''} ${titleError ? 'error' : ''}`}
+                            />
+                            {titleError && <span className="inline-error">{titleError}</span>}
+                        </div>
                     </div>
                     
                     <div className="form-group">
@@ -144,13 +156,16 @@ function AddTask() {
                         <label>Subtasks</label>
                         {subtasks.map((subtask) => (
                             <div key={subtask.id} className="subtask-input">
-                                <input 
-                                    type="text"
-                                    placeholder="e.g. Make coffee"
-                                    value={subtask.title}
-                                    onChange={(e) => handleSubtaskChange(subtask.id, e.target.value)}
-                                    className={darkMode ? 'dark' : ''}
-                                />
+                                <div className='input-container'>
+                                    <input 
+                                        type="text"
+                                        placeholder="e.g. Make coffee"
+                                        value={subtask.title}
+                                        onChange={(e) => handleSubtaskChange(subtask.id, e.target.value)}
+                                        className={`${darkMode ? 'dark' : ''} ${subtaskErrors[subtask.id] ? 'error' : ''}`}
+                                    />
+                                    {subtaskErrors[subtask.id] && <span className="inline-error">{subtaskErrors[subtask.id]}</span>}
+                                </div>
                                 <button 
                                     type="button" 
                                     className="remove-subtask" 
@@ -160,7 +175,6 @@ function AddTask() {
                                 </button>
                             </div>
                         ))}
-                        {subtaskError && <p className="form-error">{subtaskError}</p>}
                         <button 
                             type="button" 
                             className={`btn sm secondary ${darkMode ? 'dark' : ''}`}
