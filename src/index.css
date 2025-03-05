@@ -891,18 +891,11 @@ body .app.dark {
   margin-top: 1rem;
 }
 
-.form-error {
-  color: var(--red);
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-}
-
 input.error, 
 textarea.error {
   border-color: var(--red) !important;
 }
 
-/* Delete modal styles */
 .task-modal__content.delete-modal {
   width: 30rem;
   padding: 2rem;
@@ -916,7 +909,6 @@ textarea.error {
   font: var(--body-l);
   color: var(--medium-grey);
   margin: 0;
-  /* margin-bottom: 1.5rem; */
 }
 
 .delete-actions {
