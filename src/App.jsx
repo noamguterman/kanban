@@ -11,6 +11,8 @@ import AddTask from './components/AddTask'
 import AddBoard from './components/AddBoard'
 import EditBoard from './components/EditBoard'
 import DeleteBoard from './components/DeleteBoard'
+import EditTask from './components/EditTask'
+import DeleteTask from './components/DeleteTask'
 
 function addIdsToData(boards) {
   return boards.map(board => ({
@@ -43,8 +45,11 @@ function App() {
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
   const [isAddBoardModalOpen, setIsAddBoardModalOpen] = useState(false)
   const [isEditBoardModalOpen, setIsEditBoardModalOpen] = useState(false)
+  const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false)
   const [isHeaderMenuOpen, setIsHeaderMenuOpen] = useState(false)
+  const [isTaskMenuOpen, setIsTaskMenuOpen] = useState(false)
   const [isDeleteBoardModalOpen, setIsDeleteBoardModalOpen] = useState(false)
+  const [isDeleteTaskModalOpen, setIsDeleteTaskModalOpen] = useState(false)
   const [editBoardShouldAddColumn, setEditBoardShouldAddColumn] = useState(false)
   const [targetColumnName, setTargetColumnName] = useState(null)
   const manualBoardSelection = useRef(false)
@@ -98,6 +103,14 @@ function App() {
     }
   }
 
+  function handleTaskMenuClick() {
+    if (isTaskMenuOpen) {
+      setIsTaskMenuOpen(false)
+    } else {
+      setIsTaskMenuOpen(true)
+    }
+  }
+
   function openAddBoardModal() {
     setIsAddBoardModalOpen(true)
   }
@@ -139,6 +152,26 @@ function App() {
     setEditBoardShouldAddColumn(false)
   }
 
+  function openEditTaskModal() {
+    setIsTaskModalOpen(false)
+    setIsEditTaskModalOpen(true)
+    setIsTaskMenuOpen(false)
+  }
+  
+  function closeEditTaskModal() {
+    setIsEditTaskModalOpen(false)
+  }
+
+  function openDeleteTaskModal() {
+    setIsTaskModalOpen(false)
+    setIsDeleteTaskModalOpen(true)
+    setIsTaskMenuOpen(false)
+  }
+  
+  function closeDeleteTaskModal() {
+    setIsDeleteTaskModalOpen(false)
+  }
+  
   function updateBoard(updatedBoard) {
     setBoards(prevBoards => {
       return prevBoards.map(board => 
@@ -401,6 +434,51 @@ function App() {
     })
   }, [currentBoard?.id])
 
+  function updateTask(updatedTask) {
+    if (!currentBoard) return
+  
+    setBoards(prevBoards => 
+      prevBoards.map(board => {
+        if (board.id !== currentBoard.id) return board
+  
+        return {
+          ...board,
+          columns: board.columns.map(column => {
+            // Check if this column contains the task
+            const taskExists = column.tasks.some(task => task.id === updatedTask.id)
+            if (taskExists) {
+              return {
+                ...column,
+                tasks: column.tasks.map(task =>
+                  task.id === updatedTask.id ? updatedTask : task
+                )
+              }
+            }
+            return column
+          })
+        }
+      })
+    )
+  }
+
+  function deleteTask(taskId) {
+    if (!currentBoard) return
+  
+    setBoards(prevBoards => 
+      prevBoards.map(board => {
+        if (board.id !== currentBoard.id) return board
+  
+        return {
+          ...board,
+          columns: board.columns.map(column => ({
+            ...column,
+            tasks: column.tasks.filter(task => task.id !== taskId)
+          }))
+        }
+      })
+    )
+  }
+
   const contextValue = {
     darkMode,
     boards,
@@ -411,7 +489,9 @@ function App() {
     isAddTaskModalOpen,
     isAddBoardModalOpen,
     isEditBoardModalOpen,
+    isEditTaskModalOpen,
     isDeleteBoardModalOpen,
+    isDeleteTaskModalOpen,
     setCurrentBoard,
     updateTaskStatus,
     updateSubtask,
@@ -420,6 +500,7 @@ function App() {
     openTaskModal,
     closeTaskModal,
     handleHeaderMenuClick,
+    handleTaskMenuClick,
     openAddTaskModal,
     closeAddTaskModal,
     targetColumnName,
@@ -429,6 +510,10 @@ function App() {
     closeDeleteBoardModal,
     openEditBoardModal,
     closeEditBoardModal,
+    openEditTaskModal,
+    closeEditTaskModal,
+    openDeleteTaskModal,
+    closeDeleteTaskModal,
     editBoardShouldAddColumn,
     resetEditBoardAddColumnFlag,
     addNewTask,
@@ -436,7 +521,10 @@ function App() {
     updateBoard,
     moveTask,
     isHeaderMenuOpen,
-    deleteBoard
+    isTaskMenuOpen,
+    deleteBoard,
+    updateTask,
+    deleteTask,
   }
 
   return (
@@ -453,6 +541,8 @@ function App() {
           {isAddBoardModalOpen && <AddBoard />}
           {isEditBoardModalOpen && <EditBoard />}
           {isDeleteBoardModalOpen && <DeleteBoard />}
+          {isEditTaskModalOpen && <EditTask />}
+          {isDeleteTaskModalOpen && <DeleteTask />}
         </div>
       </BoardContext.Provider>
     </DndProvider>

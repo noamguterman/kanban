@@ -214,13 +214,15 @@ body .app.dark {
   top: 3px;
   cursor: pointer;
 }
-.header__menu:active {
+.header__menu:active,
+.task-modal__content--header--menu:active {
   transform: scale(0.9);
 }
-.header__menu--dropdown {
+.header__menu--dropdown,
+.task-modal__menu-dropdown {
   position: absolute;
   display: flex;
-  gap: .5rem;
+  gap: 1px;
   flex-direction: column;
   top: 110%;
   right: 0;
@@ -229,8 +231,13 @@ body .app.dark {
   transform-origin: top right;
   animation: dropdownOpen 0.3s ease forwards;
 }
+.task-modal__menu-dropdown {
+  top: 20%;
+}
 .header__menu--dropdown .btn-edit,
-.header__menu--dropdown .btn-delete {
+.header__menu--dropdown .btn-delete,
+.task-modal__menu-dropdown .btn-edit,
+.task-modal__menu-dropdown .btn-delete {
   background-color: var(--white);
   padding: 1rem 5rem 1rem 1rem;
   text-align: left;
@@ -247,27 +254,33 @@ body .app.dark {
   transform: translateY(-10px);
 }
 
-.header__menu--dropdown .btn-edit {
+.header__menu--dropdown .btn-edit,
+.task-modal__menu-dropdown .btn-edit {
   --item-index: 1;
 }
-.header__menu--dropdown .btn-edit.dark {
+.header__menu--dropdown .btn-edit.dark,
+.task-modal__menu-dropdown .btn-edit.dark {
   background-color: var(--dark-grey);
   color: var(--lines-light);
 }
-.header__menu--dropdown .btn-delete {
+.header__menu--dropdown .btn-delete,
+.task-modal__menu-dropdown .btn-delete {
   position: relative;
   color: var(--red);
   --item-index: 2;
 }
-.header__menu--dropdown .btn-edit:hover {
+.header__menu--dropdown .btn-edit:hover,
+.task-modal__menu-dropdown .btn-edit:hover {
   background-color: var(--purple);
   color: var(--white);
 }
-.header__menu--dropdown .btn-delete:hover {
+.header__menu--dropdown .btn-delete:hover,
+.task-modal__menu-dropdown .btn-delete:hover {
   right: -2rem;
   opacity: .8 !important;
 }
-.header__menu--dropdown .btn-delete.dark {
+.header__menu--dropdown .btn-delete.dark,
+.task-modal__menu-dropdown .btn-delete.dark {
   background-color: var(--dark-grey);
 }
 
@@ -910,6 +923,19 @@ textarea.error {
 
 .delete-actions .btn {
   flex: 1;
+}
+
+.input-container {
+  position: relative;
+}
+.inline-error {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--red);
+  font-size: 0.875rem;
+  pointer-events: none;
 }
 
 * {
