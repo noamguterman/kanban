@@ -4,7 +4,15 @@ import CrossIcon from '../assets/icon-cross.svg?react'
 import { BoardContext } from '../App'
 
 function EditBoard() {
-  const { darkMode, closeEditBoardModal, updateBoard, boards, currentBoard, editBoardShouldAddColumn, resetEditBoardAddColumnFlag } = useContext(BoardContext)
+  const {
+    darkMode,
+    closeEditBoardModal,
+    updateBoard,
+    currentBoard,
+    editBoardShouldAddColumn,
+    resetEditBoardAddColumnFlag
+  } = useContext(BoardContext)
+  
   const [name, setName] = useState(currentBoard.name)
   const [nameError, setNameError] = useState('')
   const [columns, setColumns] = useState(
@@ -83,21 +91,30 @@ function EditBoard() {
     })
   }
 
+  // Updated handleColumnNameChange clears errors from all duplicates when one field is edited.
   function handleColumnNameChange(id, value) {
-    setColumns(
-      columns.map(column =>
-        column.id === id ? { ...column, name: value } : column
-      )
+    const updatedColumns = columns.map(column =>
+      column.id === id ? { ...column, name: value } : column
     )
+    setColumns(updatedColumns)
+    
     setColumnErrors(prevErrors => {
       const newErrors = { ...prevErrors }
+      // Clear error for this column if it now has a value.
       if (value.trim()) {
         delete newErrors[id]
       }
+      // Also remove "Duplicate column name" errors from all columns.
+      Object.keys(newErrors).forEach(key => {
+        if (newErrors[key] === "Duplicate column name") {
+          delete newErrors[key]
+        }
+      })
       return newErrors
     })
   }
 
+  // Updated handleSubmit includes duplicate column name validation.
   function handleSubmit(e) {
     e.preventDefault()
 
@@ -111,9 +128,22 @@ function EditBoard() {
     }
 
     const newColumnErrors = {}
+    // Validate empty column names.
     columns.forEach(column => {
       if (!column.name.trim()) {
         newColumnErrors[column.id] = `Can't be empty`
+        hasError = true
+      }
+    })
+
+    // Validate duplicate column names.
+    columns.forEach(column => {
+      const trimmedName = column.name.trim()
+      if (
+        trimmedName &&
+        columns.filter(col => col.name.trim() === trimmedName).length > 1
+      ) {
+        newColumnErrors[column.id] = "Duplicate column name"
         hasError = true
       }
     })
@@ -159,7 +189,7 @@ function EditBoard() {
           <div className="form-group">
             <label>Columns</label>
             {columns.map((column, index) => (
-            <div key={column.id} className="subtask-input">
+              <div key={column.id} className="subtask-input">
                 <button
                   type="button"
                   className={`column__dot modal ${column.color}`}

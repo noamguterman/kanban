@@ -7,7 +7,7 @@ import { getCustomStyles } from '../utils/getCustomStyles_addTask.js'
 
 function EditTask() {
   // Locate the active task from the current board's columns
-  const { currentBoard, activeTaskId, updateTask, closeEditTaskModal, darkMode } = useContext(BoardContext)
+  const { currentBoard, activeTaskId, updateTask, updateTaskStatus, closeEditTaskModal, closeTaskModal, darkMode } = useContext(BoardContext)
   let currentTask
   for (const column of currentBoard.columns) {
     const found = column.tasks.find((task) => task.id === activeTaskId)
@@ -65,16 +65,16 @@ function EditTask() {
 
   function handleSubmit(e) {
     e.preventDefault()
-
+  
     let hasError = false
-
+  
     if (!title.trim()) {
       setTitleError(`Can't be empty`)
       hasError = true
     } else {
-        setTitleError('')
+      setTitleError('')
     }
-
+  
     const newSubtaskErrors = {}
     subtasks.forEach(subtask => {
       if (!subtask.title.trim()) {
@@ -82,21 +82,27 @@ function EditTask() {
         hasError = true
       }
     })
-
+  
     setSubtaskErrors(newSubtaskErrors)
-
+  
     if (hasError) return
-
+  
     const updatedTask = {
       ...currentTask,
       title: title.trim(),
       description,
-      status,
+      status, // this is the new status (column name)
       subtasks
     }
-
-    updateTask(updatedTask)
+  
+    // If the task's status has changed, use updateTaskStatus to move it.
+    if (updatedTask.status !== currentTask.status) {
+      updateTaskStatus(updatedTask.id, updatedTask.status)
+    } else {
+      updateTask(updatedTask)
+    }
     closeEditTaskModal()
+    closeTaskModal()
   }
 
   const selectedOption = options.find((option) => option.label === status) || options[0]

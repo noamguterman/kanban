@@ -86,44 +86,67 @@ function AddBoard() {
   }
 
   function handleColumnNameChange(id, value) {
-    setColumns(
-      columns.map(column =>
-        column.id === id ? { ...column, name: value } : column
-      )
+    const updatedColumns = columns.map(column =>
+      column.id === id ? { ...column, name: value } : column
     )
+    setColumns(updatedColumns)
+  
     setColumnErrors(prevErrors => {
       const newErrors = { ...prevErrors }
+      // Clear error for the current column if it now has a non-empty value.
       if (value.trim()) {
         delete newErrors[id]
       }
+      // Clear duplicate errors for all columns when any change occurs.
+      Object.keys(newErrors).forEach(key => {
+        if (newErrors[key] === "Duplicate column name") {
+          delete newErrors[key]
+        }
+      })
       return newErrors
     })
   }
 
   function handleSubmit(e) {
     e.preventDefault()
-
-    let hasError = false
-
+  
+    let hasError = false;
+  
+    // Validate board name
     if (!name.trim()) {
-      setNameError(`Can't be empty`)
+      setNameError("Can't be empty")
       hasError = true
     } else {
       setNameError('')
     }
-
+  
     const newColumnErrors = {}
+  
+    // First, validate empty column names
     columns.forEach(column => {
       if (!column.name.trim()) {
-        newColumnErrors[column.id] = `Can't be empty`
+        newColumnErrors[column.id] = "Can't be empty"
         hasError = true
       }
     })
-
+  
+    // Then, check for duplicate column names
+    columns.forEach(column => {
+      const trimmedName = column.name.trim()
+      if (
+        trimmedName &&
+        columns.filter(col => col.name.trim() === trimmedName).length > 1
+      ) {
+        newColumnErrors[column.id] = "Duplicate column name"
+        hasError = true
+      }
+    })
+  
     setColumnErrors(newColumnErrors)
-
+  
     if (hasError) return
-
+  
+    // Proceed if no errors
     const newBoard = {
       name: name.trim(),
       columns: columns.map(col => ({
@@ -131,7 +154,7 @@ function AddBoard() {
         tasks: []
       }))
     }
-
+  
     addNewBoard(newBoard)
     closeAddBoardModal()
   }
