@@ -183,6 +183,10 @@ body .app.dark {
   display: flex;
   align-items: center;
 }
+.header__right {
+  display: flex;
+  align-items: center;
+}
 .header__logo {
   position: relative;
   padding-right: 2rem;
@@ -211,7 +215,7 @@ body .app.dark {
   background: none;
   border: none;
   margin-left: 1rem;
-  top: 3px;
+  top: 2px;
   cursor: pointer;
 }
 .header__menu:active,
