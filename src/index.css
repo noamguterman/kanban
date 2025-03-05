@@ -927,14 +927,15 @@ textarea.error {
 
 .input-container {
   position: relative;
+  width: 100%;
 }
 .inline-error {
   position: absolute;
-  right: 0.5rem;
-  top: 50%;
+  right: 1rem;
+  top: 51%;
   transform: translateY(-50%);
   color: var(--red);
-  font-size: 0.875rem;
+  font: var(--body-l);
   pointer-events: none;
 }
 

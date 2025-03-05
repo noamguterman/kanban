@@ -22,7 +22,7 @@ function EditTask() {
   const [titleError, setTitleError] = useState('')
   const [description, setDescription] = useState(currentTask?.description || '')
   const [subtasks, setSubtasks] = useState(currentTask?.subtasks || [])
-  const [subtaskError, setSubtaskError] = useState('')
+  const [subtaskErrors, setSubtaskErrors] = useState('')
   const [status, setStatus] = useState(currentTask?.status || currentBoard.columns[0]?.name || '')
   const customStyles = getCustomStyles(darkMode)
   // Generate status options from board columns
@@ -41,6 +41,11 @@ function EditTask() {
 
   function handleRemoveSubtask(id) {
     setSubtasks(subtasks.filter((subtask) => subtask.id !== id))
+    setSubtaskErrors(prevErrors => {
+      const newErrors = { ...prevErrors }
+      delete newErrors[id]
+      return newErrors
+    })
   }
 
   function handleSubtaskChange(id, value) {
@@ -49,23 +54,38 @@ function EditTask() {
         subtask.id === id ? { ...subtask, title: value } : subtask
       )
     )
-    if (subtaskError && value.trim()) {
-      setSubtaskError('')
-    }
+    setSubtaskErrors(prevErrors => {
+      const newErrors = { ...prevErrors }
+      if (value.trim()) {
+        delete newErrors[id]
+      }
+      return newErrors
+    })
   }
 
   function handleSubmit(e) {
     e.preventDefault()
 
+    let hasError = false
+
     if (!title.trim()) {
-      setTitleError('Task title cannot be empty')
-      return
+      setTitleError(`Can't be empty`)
+      hasError = true
+    } else {
+        setTitleError('')
     }
 
-    if (subtasks.length > 0 && subtasks.some((sub) => !sub.title.trim())) {
-      setSubtaskError('Subtask title cannot be empty')
-      return
-    }
+    const newSubtaskErrors = {}
+    subtasks.forEach(subtask => {
+      if (!subtask.title.trim()) {
+        newSubtaskErrors[subtask.id] = `Can't be empty`
+        hasError = true
+      }
+    })
+
+    setSubtaskErrors(newSubtaskErrors)
+
+    if (hasError) return
 
     const updatedTask = {
       ...currentTask,
@@ -96,7 +116,7 @@ function EditTask() {
                   setTitle(e.target.value)
                   if (titleError) setTitleError('')
                 }}
-                className={darkMode ? 'dark' : ''}
+                className={`${darkMode ? 'dark' : ''} ${titleError ? 'error' : ''}`}
                 placeholder="Task title"
               />
               {titleError && <span className="inline-error">{titleError}</span>}
@@ -116,19 +136,21 @@ function EditTask() {
             <label>Subtasks</label>
             {subtasks.map((subtask) => (
               <div key={subtask.id} className="subtask-input">
-                <input
-                  type="text"
-                  value={subtask.title}
-                  onChange={(e) => handleSubtaskChange(subtask.id, e.target.value)}
-                  className={darkMode ? 'dark' : ''}
-                  placeholder="Subtask title"
-                />
+                <div className='input-container'>
+                    <input
+                        type="text"
+                        value={subtask.title}
+                        onChange={(e) => handleSubtaskChange(subtask.id, e.target.value)}
+                        className={`${darkMode ? 'dark' : ''} ${subtaskErrors[subtask.id] ? 'error' : ''}`}
+                        placeholder="Subtask title"
+                    />
+                    {subtaskErrors[subtask.id] && <span className="inline-error">{subtaskErrors[subtask.id]}</span>}
+                </div>
                 <button type="button" className="remove-subtask" onClick={() => handleRemoveSubtask(subtask.id)}>
                   <CrossIcon />
                 </button>
               </div>
             ))}
-            {subtaskError && <span className="inline-error">{subtaskError}</span>}
             <button
               type="button"
               className={`btn sm secondary ${darkMode ? 'dark' : ''}`}
