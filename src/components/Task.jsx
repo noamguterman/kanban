@@ -14,12 +14,12 @@ function Task({ task, columnName, index }) {
 
     const [{ isDragging }, drag] = useDrag({
         type: 'task',
-        item: { 
+        item: () => ({ 
             id: task.id, 
             columnName, 
             index,
             originalIndex: index // Track original position
-        },
+        }),
         collect: (monitor) => ({
             isDragging: monitor.isDragging()
         }),
@@ -28,7 +28,7 @@ function Task({ task, columnName, index }) {
             const item = monitor.getItem()
             return item && item.id === task.id
         }
-    })
+    }, [task.id, columnName, index])
 
     const [{ isOver }, drop] = useDrop({
         accept: 'task',
