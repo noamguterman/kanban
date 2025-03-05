@@ -32,13 +32,19 @@ function EditTask() {
   }))
   const newSubtaskInputRef = useRef(null)
   const focusNewSubtask = useRef(false)
+  const mouseDownOnBackdrop = useRef(false)
 
   useEffect(() => {
-          if (focusNewSubtask.current && newSubtaskInputRef.current) {
-            newSubtaskInputRef.current.focus()
-            focusNewSubtask.current = false
-          }
-        }, [subtasks])
+    if (focusNewSubtask.current && newSubtaskInputRef.current) {
+      newSubtaskInputRef.current.focus()
+      focusNewSubtask.current = false
+    }
+  }, [subtasks])
+
+  function handleMouseDown(e) {
+    // Check if the mousedown happened on backdrop (not on modal content)
+    mouseDownOnBackdrop.current = e.target === e.currentTarget
+  }
 
   function handleStatusChange(selectedOption) {
     setStatus(selectedOption.label)
@@ -71,6 +77,13 @@ function EditTask() {
       }
       return newErrors
     })
+  }
+
+  function handleBackdropClick(e) {
+    if (e.target === e.currentTarget && mouseDownOnBackdrop.current) {
+      closeEditTaskModal()
+    }
+    mouseDownOnBackdrop.current = false
   }
 
   function handleSubmit(e) {
@@ -118,7 +131,7 @@ function EditTask() {
   const selectedOption = options.find((option) => option.label === status) || options[0]
 
   return (
-    <div className="task-modal" onClick={(e) => { if (e.target === e.currentTarget) closeEditTaskModal() }}>
+    <div className="task-modal" onClick={handleBackdropClick} onMouseDown={handleMouseDown}>
       <div className={`task-modal__content ${darkMode ? 'dark' : ''}`} onClick={(e) => e.stopPropagation()}>
         <h2 className="task-modal__content--header--title">Edit Task</h2>
         <form onSubmit={handleSubmit}>

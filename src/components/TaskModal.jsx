@@ -15,6 +15,7 @@ function TaskModal({ task, hasSubtasks, totalSubtasks, completedSubtasks }) {
   // State & refs for the task modal menu
   const taskMenuRef = useRef(null)
   const taskMenuButtonRef = useRef(null)
+  const mouseDownOnBackdrop = useRef(false)
 
   useEffect(() => {
     function handleOutsideClicks(e) {
@@ -44,14 +45,22 @@ function TaskModal({ task, hasSubtasks, totalSubtasks, completedSubtasks }) {
     }
   }, [])
 
+  function handleMouseDown(e) {
+    // Check if the mousedown happened on backdrop (not on modal content)
+    mouseDownOnBackdrop.current = e.target === e.currentTarget
+  }
+
   function handleStatusChange(selectedOption) {
     updateTaskStatus(task.id, selectedOption.label)
   }
 
   function handleBackdropClick(e) {
-    if (e.target === e.currentTarget) {
+    // Only close if both mousedown and click happened on backdrop
+    if (e.target === e.currentTarget && mouseDownOnBackdrop.current) {
       closeTaskModal()
     }
+    // Reset the flag
+    mouseDownOnBackdrop.current = false
   }
 
   function handleSubtaskToggle(e, index) {
@@ -60,7 +69,7 @@ function TaskModal({ task, hasSubtasks, totalSubtasks, completedSubtasks }) {
   }
 
   return (
-    <div className="task-modal" onClick={handleBackdropClick}>
+    <div className="task-modal" onClick={handleBackdropClick} onMouseDown={handleMouseDown}>
       <div className={`task-modal__content ${darkMode ? 'dark' : ''}`}>
         <div className="task-modal__content--header">
           <h2 className="task-modal__content--header--title">{task.title}</h2>

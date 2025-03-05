@@ -1,13 +1,21 @@
-import { useContext } from 'react'
+import { useContext, useRef } from 'react'
 import { BoardContext } from '../App'
 
 function DeleteTask() {
   const { darkMode, closeDeleteTaskModal, currentBoard, deleteTask, activeTaskId } = useContext(BoardContext)
+  const mouseDownOnBackdrop = useRef(false)
+
+  function handleMouseDown(e) {
+    // Check if the mousedown happened on backdrop (not on modal content)
+    mouseDownOnBackdrop.current = e.target === e.currentTarget
+  }
 
   function handleBackdropClick(e) {
-    if (e.target === e.currentTarget) {
+    if (e.target === e.currentTarget && mouseDownOnBackdrop.current) {
       closeTaskModal()
     }
+
+    mouseDownOnBackdrop.current = false
   }
 
   function handleDeleteTask() {
@@ -28,7 +36,7 @@ function DeleteTask() {
   }
 
   return (
-    <div className="task-modal" onClick={handleBackdropClick}>
+    <div className="task-modal" onClick={handleBackdropClick} onMouseDown={handleMouseDown}>
       <div className={`task-modal__content delete-modal ${darkMode ? 'dark' : ''}`}>
         <h2 className="task-modal__content--header--title delete-title">Delete this task?</h2>
         <p className="delete-message">

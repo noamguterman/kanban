@@ -21,6 +21,7 @@ function AddTask() {
     const titleInputRef = useRef(null)
     const newSubtaskInputRef = useRef(null)
     const focusNewSubtask = useRef(false)
+    const mouseDownOnBackdrop = useRef(false)
 
     // Generate options for the Select dropdown
     const options = currentBoard.columns.map(column => ({
@@ -49,14 +50,21 @@ function AddTask() {
         }
       }, [subtasks])
 
+    function handleMouseDown(e) {
+    // Check if the mousedown happened on backdrop (not on modal content)
+    mouseDownOnBackdrop.current = e.target === e.currentTarget
+    }
+    
     function handleStatusChange(selectedOption) {
-        setStatus(selectedOption.label)
+    setStatus(selectedOption.label)
     }
 
     function handleBackdropClick(e) {
-        if (e.target === e.currentTarget) {
+        if (e.target === e.currentTarget && mouseDownOnBackdrop.current) {
             closeAddTaskModal()
         }
+
+        mouseDownOnBackdrop.current = false
     }
 
     function handleAddSubtask() {
@@ -128,7 +136,7 @@ function AddTask() {
                           (options.length > 0 ? options[0] : null)
 
     return (
-        <div className="task-modal" onClick={handleBackdropClick}>
+        <div className="task-modal" onClick={handleBackdropClick} onMouseDown={handleMouseDown}>
             <div className={`task-modal__content ${darkMode ? 'dark' : ''}`} onClick={e => e.stopPropagation()}>
                 <h2 className="task-modal__content--header--title">Add New Task</h2>
                 

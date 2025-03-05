@@ -26,6 +26,7 @@ function EditBoard() {
   const [columnErrors, setColumnErrors] = useState({})
   const newColumnInputRef = useRef(null)
   const shouldFocusNewColumn = useRef(false)
+  const mouseDownOnBackdrop = useRef(false)
 
   useEffect(() => {
     if (nameError) setNameError('')
@@ -49,11 +50,19 @@ function EditBoard() {
       shouldFocusNewColumn.current = false
     }
   }, [columns])
+
+  function handleMouseDown(e) {
+    // Check if the mousedown happened on backdrop (not on modal content)
+    mouseDownOnBackdrop.current = e.target === e.currentTarget
+  }
   
   function handleBackdropClick(e) {
-    if (e.target === e.currentTarget) {
+    // Only close if both mousedown and click happened on backdrop
+    if (e.target === e.currentTarget && mouseDownOnBackdrop.current) {
       closeEditBoardModal()
     }
+    // Reset the flag
+    mouseDownOnBackdrop.current = false
   }
 
   function handleAddColumn() {
@@ -166,7 +175,7 @@ function EditBoard() {
   }
 
   return (
-    <div className="task-modal" onClick={handleBackdropClick}>
+    <div className="task-modal" onClick={handleBackdropClick} onMouseDown={handleMouseDown}>
       <div className={`task-modal__content ${darkMode ? 'dark' : ''}`} onClick={e => e.stopPropagation()}>
         <h2 className="task-modal__content--header--title">Edit Board</h2>
         <form onSubmit={handleSubmit}>
