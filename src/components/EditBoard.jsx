@@ -18,7 +18,6 @@ function EditBoard() {
   const [columnNameError, setColumnNameError] = useState('')
   const newColumnInputRef = useRef(null)
   const shouldFocusNewColumn = useRef(false)
-  const nameInputRef = useRef(null)
 
   useEffect(() => {
     if (nameError) setNameError('')
@@ -26,7 +25,6 @@ function EditBoard() {
 
   useEffect(() => {
     document.body.classList.add('modal-open')
-    if (nameInputRef.current) nameInputRef.current.focus()
     return () => document.body.classList.remove('modal-open')
   }, [])
 
@@ -134,7 +132,6 @@ function EditBoard() {
           <div className="form-group">
             <label>Name</label>
             <input 
-              ref={nameInputRef}
               type="text"
               placeholder="e.g. Web Design"
               value={name}
