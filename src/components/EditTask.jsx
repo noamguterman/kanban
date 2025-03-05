@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import CrossIcon from '../assets/icon-cross.svg?react'
 import Select from 'react-select'
 import { v4 as uuidv4 } from 'uuid'
@@ -30,6 +30,15 @@ function EditTask() {
     value: column.name.toLowerCase(),
     label: column.name
   }))
+  const newSubtaskInputRef = useRef(null)
+  const focusNewSubtask = useRef(false)
+
+  useEffect(() => {
+          if (focusNewSubtask.current && newSubtaskInputRef.current) {
+            newSubtaskInputRef.current.focus()
+            focusNewSubtask.current = false
+          }
+        }, [subtasks])
 
   function handleStatusChange(selectedOption) {
     setStatus(selectedOption.label)
@@ -37,6 +46,7 @@ function EditTask() {
 
   function handleAddSubtask() {
     setSubtasks([...subtasks, { id: uuidv4(), title: '', isCompleted: false }])
+    focusNewSubtask.current = true
   }
 
   function handleRemoveSubtask(id) {
@@ -140,7 +150,7 @@ function EditTask() {
           </div>
           <div className="form-group">
             <label>Subtasks</label>
-            {subtasks.map((subtask) => (
+            {subtasks.map((subtask, index) => (
               <div key={subtask.id} className="subtask-input">
                 <div className='input-container'>
                     <input
@@ -149,6 +159,7 @@ function EditTask() {
                         onChange={(e) => handleSubtaskChange(subtask.id, e.target.value)}
                         className={`${darkMode ? 'dark' : ''} ${subtaskErrors[subtask.id] ? 'error' : ''}`}
                         placeholder="Subtask title"
+                        ref={index === subtasks.length - 1 ? newSubtaskInputRef : null}
                     />
                     {subtaskErrors[subtask.id] && <span className="inline-error">{subtaskErrors[subtask.id]}</span>}
                 </div>
