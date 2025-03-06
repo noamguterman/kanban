@@ -197,7 +197,6 @@ function EditBoard() {
                 type="text"
                 placeholder="e.g. Web Design"
                 value={name}
-                maxLength={20}
                 onChange={(e) => {
                   setName(e.target.value)
                   if (nameError) setNameError('')
@@ -222,7 +221,7 @@ function EditBoard() {
                     type="text"
                     placeholder="e.g. Todo"
                     value={column.name}
-                    maxLength={15}
+                    maxLength={45}
                     onChange={(e) => handleColumnNameChange(column.id, e.target.value)}
                     className={`${darkMode ? 'dark' : ''} ${columnErrors[column.id] ? 'error' : ''}`}
                     ref={index === columns.length - 1 ? newColumnInputRef : null}

@@ -65,6 +65,7 @@
   font-family: "Plus Jakarta Sans", sans-serif;
   scrollbar-width: thin;
   outline-color: var(--purple-hover);
+  word-break: break-word;
 }
 
 .hidden {
@@ -174,6 +175,7 @@ body .app.dark {
   border-bottom: 1px solid var(--lines-light);
   padding: 1rem 2rem;
   left: 0;
+  gap: 1rem;
   right: 0;
   z-index: 2;
   min-height: 5.9rem;
@@ -216,6 +218,9 @@ body .app.dark {
 .header h1 {
   font: var(--heading-xl);
   margin-left: 2rem;
+}
+.header .btn {
+  min-width: 12.4rem;
 }
 .header__menu {
   position: relative;
@@ -597,6 +602,7 @@ body .app.dark {
   height: 15px;
   border-radius: 50%;
   background-color: var(--purple);
+  min-width: 15px;
 }
 .color1 { background-color: var(--dot-color1); }
 .color2 { background-color: var(--dot-color2); }
@@ -685,7 +691,6 @@ body .app.dark {
   cursor: pointer;
   position: relative;
   margin-bottom: 1.25rem;
-  word-break: break-word;
 }
 .task__card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -780,7 +785,6 @@ body .app.dark {
   overflow-y: auto;
   overflow-x: hidden;
   transform-origin: center;
-  /* animation: slideIn 0.3s ease forwards; */
 }
 
 .task-modal__content.dark {
@@ -791,6 +795,7 @@ body .app.dark {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
 }
 .task-modal__content--header--title {
   font: var(--heading-l);
@@ -1018,10 +1023,6 @@ textarea::placeholder {
   color: var(--medium-grey-dark);
 }
 
-* {
-  /* border: 1px solid red; */
-}
-
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -1042,4 +1043,13 @@ textarea::placeholder {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+
+
+
+
+
+* {
+  /* border: 1px solid red; */
 }

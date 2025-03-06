@@ -189,7 +189,6 @@ function AddBoard() {
               <input 
                 ref={nameInputRef}
                 type="text"
-                maxLength={20}
                 placeholder="e.g. Web Design"
                 value={name}
                 onChange={(e) => {
@@ -217,7 +216,7 @@ function AddBoard() {
                     type="text"
                     placeholder="e.g. Todo"
                     value={column.name}
-                    maxLength={15}
+                    maxLength={45}
                     onChange={(e) => handleColumnNameChange(column.id, e.target.value)}
                     className={`${darkMode ? 'dark' : ''} ${columnErrors[column.id] ? 'error' : ''}`}
                     ref={index === columns.length - 1 ? newColumnInputRef : null}
