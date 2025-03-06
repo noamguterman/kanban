@@ -574,7 +574,6 @@ body .app.dark {
 }
 .column__header {
   display: flex;
-  align-items: center;
   gap: .75rem;
   padding-bottom: 1.5rem;
 }
