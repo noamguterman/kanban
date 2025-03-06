@@ -703,6 +703,9 @@ body .app.dark {
 .task__card.dark:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
+.task__card.dark:hover .task__card--title {
+  color: var(--purple-hover);
+}
 .task__card--title {
   display: block;
   font: var(--heading-m);
