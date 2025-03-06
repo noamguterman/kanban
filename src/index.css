@@ -28,6 +28,8 @@
   --dark-grey: #2B2C37;
   --darker-grey: #262731;
   --medium-grey: #828FA3;
+  --medium-grey-light: #4E5A6A;
+  --medium-grey-dark: #B1BAC4;
   --light-grey: #d0d4dd;
   --dot-color1: #49C4E5;
   --dot-color2: #8471F2;
@@ -146,8 +148,12 @@ body .app.dark {
 .btn.secondary.disabled,
 .btn.secondary:disabled {
   background-color: transparent;
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
   border-color: var(--medium-grey);
+}
+.app.dark .btn.secondary.disabled,
+.app.dark .btn.secondary:disabled {
+  color: var(--medium-grey-dark);
 }
 
 .app {
@@ -247,7 +253,7 @@ body .app.dark {
   padding: 1rem 5rem 1rem 1rem;
   text-align: left;
   font: var(--body-m);
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
   border: none;
   border-radius: 8px 0 0 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -323,11 +329,14 @@ body .app.dark {
 .sidebar__boards--all-boards {
   font-size: .75rem;
   font-weight: 700;
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
   text-transform: uppercase;
   letter-spacing: var(--heading-s-kerning);
   padding: 1rem 0;
   padding-left: 2rem;
+}
+.app.dark .sidebar__boards--all-boards {
+  color: var(--medium-grey-dark);
 }
 .sidebar__boards--board {
   display: flex;
@@ -361,10 +370,16 @@ body .app.dark {
 .sidebar__boards--board--icon {
   width: 16px;
   height: 16px;
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
+}
+.app.dark .sidebar__boards--board--icon {
+  color: var(--medium-grey-dark);
 }
 .sidebar__boards--board--name {
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
+}
+.app.dark .sidebar__boards--board--name {
+  color: var(--medium-grey-dark);
 }
 .sidebar__boards--board.active {
   background-color: var(--purple);
@@ -397,11 +412,17 @@ body .app.dark {
   background-color: inherit;
   border: 1px dashed var(--purple);
 }
+.sidebar__boards--board.new.dark .sidebar__boards--board--name {
+  color: var(--purple-hover);
+}
 .sidebar__boards--board.new.dark:hover .sidebar__boards--board--name {
-  color: var(--purple);
+  color: var(--purple-hover);
+}
+.sidebar__boards--board.new.dark .sidebar__boards--board--icon {
+  color: var(--purple-hover);
 }
 .sidebar__boards--board.new.dark:hover .sidebar__boards--board--icon {
-  color: var(--purple);
+  color: var(--purple-hover);
 }
 .sidebar__theme {
   background-color: var(--bg-light);
@@ -463,7 +484,7 @@ body .app.dark {
   justify-content: center;
   background: none;
   font: var(--heading-m);
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
   cursor: pointer;
   padding: 0 2rem;
   margin: 1.5rem 0;
@@ -471,8 +492,11 @@ body .app.dark {
   user-select: none;
   transition: all .2s ease;
 }
+.app.dark .sidebar__hide {
+  color: var(--medium-grey-dark);
+}
 .sidebar__hide:hover {
-  color: var(--purple);
+  color: var(--purple) !important;
 }
 
 .sidebar-mini {
@@ -523,8 +547,11 @@ body .app.dark {
 }
 .empty-board__text {
   font: var(--heading-l);
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
   margin: 0;
+}
+.app.dark .empty-board__text {
+  color: var(--medium-grey-dark);
 }
 
 .column {
@@ -576,9 +603,12 @@ body .app.dark {
 
 .column__header--name {
   font: var(--heading-s);
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
   text-transform: uppercase;
   letter-spacing: var(--heading-s-kerning);
+}
+.app.dark .column__header--name {
+  color: var(--medium-grey-dark);
 }
 .column__tasks {
   display: flex;
@@ -611,6 +641,7 @@ body .app.dark {
   opacity: 1;
 }
 .column-ghost.dark {
+  color: var(--purple-hover);
   background-color: var(--darker-grey);
 }
 .task-ghost {
@@ -620,10 +651,13 @@ body .app.dark {
   border: 1px dashed var(--purple);
   border-radius: 8px;
   font: var(--heading-l);
-  color: var(--medium-grey);
+  color: var(--purple);
   cursor: pointer;
   padding: 1.5rem 1rem;
   width: 100%;
+}
+.app.dark .task-ghost {
+  color: var(--purple-hover);
 }
 .task-ghost:hover {
   opacity: 1;
@@ -633,7 +667,7 @@ body .app.dark {
   opacity: 1;
 }
 .task-ghost.dark {
-  background-color: var(--lines-dark);
+  background-color: var(--darker-grey);
 }
 
 .task__card {
@@ -672,7 +706,10 @@ body .app.dark {
 }
 .task__card--subtasks {
   font: var(--body-m);
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
+}
+.app.dark .task__card--subtasks {
+  color: var(--medium-grey-dark);
 }
 .task__card.dragging {
   cursor: grabbing !important;
@@ -762,8 +799,11 @@ body .app.dark {
 }
 .task-modal__content--description {
   font: var(--body-l);
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
   margin: 0;
+}
+.app.dark .task-modal__content--description {
+  color: var(--medium-grey-dark);
 }
 .task-modal__content--subtasks {
   display: flex;
@@ -772,9 +812,12 @@ body .app.dark {
 }
 .task-modal__content--subtasks--title {
   font: var(--body-m);
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
   margin: 0;
   margin-bottom: .5rem;
+}
+.app.dark .task-modal__content--subtasks--title {
+  color: var(--medium-grey-dark);
 }
 .task-modal__content--subtasks--title.dark {
   color: var(--white);
@@ -826,8 +869,11 @@ body .app.dark {
 }
 .task-modal__content--status p {
   font: var(--body-m);
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
   margin: 0;
+}
+.app.dark .task-modal__content--status p {
+  color: var(--medium-grey-dark);
 }
 .task-modal__content--status.dark p {
   color: var(--white);
@@ -846,7 +892,10 @@ body .app.dark {
 
 .form-group label {
   font: var(--body-m);
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
+}
+.app.dark .form-group label {
+  color: var(--medium-grey-dark);
 }
 
 .form-group label.dark {
@@ -891,7 +940,10 @@ body .app.dark {
 }
 
 .remove-subtask svg {
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
+}
+.app.dark .remove-subtask svg {
+  color: var(--medium-grey-dark);
 }
 
 .remove-subtask:hover svg {
@@ -919,8 +971,11 @@ textarea.error {
 
 .delete-message {
   font: var(--body-l);
-  color: var(--medium-grey);
+  color: var(--medium-grey-light);
   margin: 0;
+}
+.app.dark .delete-message {
+  color: var(--medium-grey-dark);
 }
 
 .delete-actions {
@@ -946,6 +1001,15 @@ textarea.error {
   color: var(--red);
   font: var(--body-l);
   pointer-events: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--medium-grey-light);
+}
+.app.dark input::placeholder,
+.app.dark textarea::placeholder {
+  color: var(--medium-grey-dark);
 }
 
 * {

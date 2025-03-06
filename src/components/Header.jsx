@@ -52,6 +52,7 @@ function Header() {
                     className={`header__menu ${!currentBoard.name ? 'hidden' : ''}`} 
                     onClick={handleHeaderMenuClick}
                     ref={buttonRef}
+                    aria-label='Open board menu'
                 >
                     <MenuIcon alt='Menu icon' />
                 </button>
