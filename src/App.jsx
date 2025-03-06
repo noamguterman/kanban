@@ -240,7 +240,23 @@ function App() {
 
   function updateTaskStatus(taskId, newStatus) {
     if (!currentBoard) return
-
+    
+    // Find the current task and check if status is changing
+    let currentStatus = null
+    let found = false
+    
+    for (const column of currentBoard.columns) {
+        const task = column.tasks.find(t => t.id === taskId)
+        if (task) {
+            currentStatus = task.status
+            found = true
+            break
+        }
+    }
+    
+    // If task not found or status isn't changing, return early
+    if (!found || currentStatus === newStatus) return
+    
     const currentActiveTaskId = activeTaskId
 
     setBoards(prevBoards => {
@@ -275,10 +291,10 @@ function App() {
     })
 
     if (currentActiveTaskId === taskId) {
-      setActiveTaskId(taskId);
-      setIsTaskModalOpen(true);
-  }
-  }
+        setActiveTaskId(taskId)
+        setIsTaskModalOpen(true)
+    }
+}
   
   function updateSubtask(taskId, subtaskIndex) {
     if (!currentBoard) return

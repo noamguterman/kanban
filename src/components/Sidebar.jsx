@@ -64,7 +64,7 @@ function Sidebar() {
                         onClick={() => toggleDarkMode()}
                     >
                         <LightThemeIcon alt='Light theme icon' />
-                        <input type='checkbox' checked={darkMode} />
+                        <input id='theme-checkbox' type='checkbox' checked={darkMode} readOnly />
                         <span className='sidebar__theme--slider'></span>
                         <DarkThemeIcon alt='Dark theme icon' />
                     </div>
