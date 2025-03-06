@@ -412,6 +412,9 @@ body .app.dark {
   background-color: inherit;
   border: 1px dashed var(--purple);
 }
+.sidebar__boards--board.new.dark:hover {
+  border: 1px dashed var(--purple-hover);
+}
 .sidebar__boards--board.new.dark .sidebar__boards--board--name {
   color: var(--purple-hover);
 }

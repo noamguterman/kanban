@@ -36,7 +36,9 @@ function addIdsToData(boards) {
 export const BoardContext = createContext()
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  })
   const [boards, setBoards] = useState(addIdsToData(demoData.boards))
   const [currentBoard, setCurrentBoard] = useState(boards[0])
   const [sidebarOpen, setSidebarOpen] = useState(true)
