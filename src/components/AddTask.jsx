@@ -4,6 +4,7 @@ import Select from 'react-select'
 import CrossIcon from '../assets/icon-cross.svg?react'
 import { BoardContext } from '../App'
 import { getCustomStyles } from '../utils/getCustomStyles_addTask.js'
+import useFocusTrap from '../hooks/useFocusTrap'
 
 function AddTask() {
     const { currentBoard, darkMode, addNewTask, closeAddTaskModal, targetColumnName } = useContext(BoardContext)
@@ -21,7 +22,10 @@ function AddTask() {
     const titleInputRef = useRef(null)
     const newSubtaskInputRef = useRef(null)
     const focusNewSubtask = useRef(false)
+    const modalRef = useRef(null)
     const mouseDownOnBackdrop = useRef(false)
+
+    useFocusTrap(modalRef, true, closeAddTaskModal)
 
     // Generate options for the Select dropdown
     const options = currentBoard.columns.map(column => ({
@@ -137,8 +141,15 @@ function AddTask() {
 
     return (
         <div className="task-modal" onClick={handleBackdropClick} onMouseDown={handleMouseDown}>
-            <div className={`task-modal__content ${darkMode ? 'dark' : ''}`} onClick={e => e.stopPropagation()}>
-                <h2 className="task-modal__content--header--title">Add New Task</h2>
+            <div 
+                ref={modalRef}
+                className={`task-modal__content ${darkMode ? 'dark' : ''}`} 
+                onClick={e => e.stopPropagation()}
+                role='dialog'
+                aria-modal='true'
+                aria-labelledby='add-task-title'
+            >
+                <h2 id="add-task-title" className="task-modal__content--header--title">Add New Task</h2>
                 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">

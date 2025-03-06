@@ -2,6 +2,7 @@ import { useState, useContext, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import CrossIcon from '../assets/icon-cross.svg?react'
 import { BoardContext } from '../App'
+import useFocusTrap from '../hooks/useFocusTrap'
 
 function EditBoard() {
   const {
@@ -26,7 +27,10 @@ function EditBoard() {
   const [columnErrors, setColumnErrors] = useState({})
   const newColumnInputRef = useRef(null)
   const shouldFocusNewColumn = useRef(false)
+  const modalRef = useRef(null)
   const mouseDownOnBackdrop = useRef(false)
+
+  useFocusTrap(modalRef, true, closeEditBoardModal)
 
   useEffect(() => {
     if (nameError) setNameError('')
@@ -176,8 +180,15 @@ function EditBoard() {
 
   return (
     <div className="task-modal" onClick={handleBackdropClick} onMouseDown={handleMouseDown}>
-      <div className={`task-modal__content ${darkMode ? 'dark' : ''}`} onClick={e => e.stopPropagation()}>
-        <h2 className="task-modal__content--header--title">Edit Board</h2>
+      <div 
+        ref={modalRef}
+        className={`task-modal__content ${darkMode ? 'dark' : ''}`} 
+        onClick={e => e.stopPropagation()}
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby='edit-board-title'
+      >
+        <h2 id='edit-board-title' className="task-modal__content--header--title">Edit Board</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Name</label>

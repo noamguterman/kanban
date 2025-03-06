@@ -62,6 +62,7 @@
   min-width: min-content;
   font-family: "Plus Jakarta Sans", sans-serif;
   scrollbar-width: thin;
+  outline-color: var(--purple-hover);
 }
 
 .hidden {
@@ -606,6 +607,9 @@ body .app.dark {
   opacity: 1;
   transition: opacity 0.5s ease;
 }
+.column-ghost:focus {
+  opacity: 1;
+}
 .column-ghost.dark {
   background-color: var(--darker-grey);
 }
@@ -624,6 +628,9 @@ body .app.dark {
 .task-ghost:hover {
   opacity: 1;
   transition: opacity 0.5s ease;
+}
+.task-ghost:focus {
+  opacity: 1;
 }
 .task-ghost.dark {
   background-color: var(--lines-dark);

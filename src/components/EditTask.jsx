@@ -4,6 +4,7 @@ import Select from 'react-select'
 import { v4 as uuidv4 } from 'uuid'
 import { BoardContext } from '../App'
 import { getCustomStyles } from '../utils/getCustomStyles_addTask.js'
+import useFocusTrap from '../hooks/useFocusTrap'
 
 function EditTask() {
   // Locate the active task from the current board's columns
@@ -32,7 +33,10 @@ function EditTask() {
   }))
   const newSubtaskInputRef = useRef(null)
   const focusNewSubtask = useRef(false)
+  const modalRef = useRef(null)
   const mouseDownOnBackdrop = useRef(false)
+
+  useFocusTrap(modalRef, true, closeEditTaskModal)
 
   useEffect(() => {
     if (focusNewSubtask.current && newSubtaskInputRef.current) {
@@ -132,8 +136,15 @@ function EditTask() {
 
   return (
     <div className="task-modal" onClick={handleBackdropClick} onMouseDown={handleMouseDown}>
-      <div className={`task-modal__content ${darkMode ? 'dark' : ''}`} onClick={(e) => e.stopPropagation()}>
-        <h2 className="task-modal__content--header--title">Edit Task</h2>
+      <div 
+        ref={modalRef}
+        className={`task-modal__content ${darkMode ? 'dark' : ''}`} 
+        onClick={(e) => e.stopPropagation()}
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby='edit-task-title'
+      >
+        <h2 id='edit-task-title' className="task-modal__content--header--title">Edit Task</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Title</label>

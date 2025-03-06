@@ -3,6 +3,7 @@ import Select from 'react-select'
 import { useContext, useEffect, useRef } from 'react'
 import { BoardContext } from '../App'
 import { getCustomStyles } from '../utils/getCustomStyles.js'
+import useFocusTrap from '../hooks/useFocusTrap.js'
 
 function TaskModal({ task, hasSubtasks, totalSubtasks, completedSubtasks }) {
   const { darkMode, currentBoard, updateSubtask, updateTaskStatus, closeTaskModal, isTaskMenuOpen, handleTaskMenuClick, openEditTaskModal, openDeleteTaskModal } = useContext(BoardContext)
@@ -15,7 +16,10 @@ function TaskModal({ task, hasSubtasks, totalSubtasks, completedSubtasks }) {
   // State & refs for the task modal menu
   const taskMenuRef = useRef(null)
   const taskMenuButtonRef = useRef(null)
+  const modalRef = useRef(null)
   const mouseDownOnBackdrop = useRef(false)
+
+  useFocusTrap(modalRef, true, closeTaskModal)
 
   useEffect(() => {
     function handleOutsideClicks(e) {
@@ -70,9 +74,16 @@ function TaskModal({ task, hasSubtasks, totalSubtasks, completedSubtasks }) {
 
   return (
     <div className="task-modal" onClick={handleBackdropClick} onMouseDown={handleMouseDown}>
-      <div className={`task-modal__content ${darkMode ? 'dark' : ''}`}>
+      <div 
+        ref={modalRef}
+        className={`task-modal__content ${darkMode ? 'dark' : ''}`}
+        onClick={(e) => e.stopPropagation()}
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby='task-title'
+      >
         <div className="task-modal__content--header">
-          <h2 className="task-modal__content--header--title">{task.title}</h2>
+          <h2 id='task-title' className="task-modal__content--header--title">{task.title}</h2>
           <button
             className="task-modal__content--header--menu"
             onClick={handleTaskMenuClick}

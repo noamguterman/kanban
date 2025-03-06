@@ -1,9 +1,13 @@
 import { useContext, useRef } from 'react'
 import { BoardContext } from '../App'
+import useFocusTrap from '../hooks/useFocusTrap'
 
 function DeleteTask() {
   const { darkMode, closeDeleteTaskModal, currentBoard, deleteTask, activeTaskId } = useContext(BoardContext)
+  const modalRef = useRef(null)
   const mouseDownOnBackdrop = useRef(false)
+
+  useFocusTrap(modalRef, true, closeDeleteTaskModal)
 
   function handleMouseDown(e) {
     // Check if the mousedown happened on backdrop (not on modal content)
@@ -37,8 +41,14 @@ function DeleteTask() {
 
   return (
     <div className="task-modal" onClick={handleBackdropClick} onMouseDown={handleMouseDown}>
-      <div className={`task-modal__content delete-modal ${darkMode ? 'dark' : ''}`}>
-        <h2 className="task-modal__content--header--title delete-title">Delete this task?</h2>
+      <div 
+        ref={modalRef}
+        className={`task-modal__content delete-modal ${darkMode ? 'dark' : ''}`}
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby='delete-task-title'
+      >
+        <h2 id='delete-task-title' className="task-modal__content--header--title delete-title">Delete this task?</h2>
         <p className="delete-message">
           Are you sure you want to delete the task &apos;{currentTaskTitle}&apos;? This action cannot be undone.
         </p>

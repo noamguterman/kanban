@@ -129,6 +129,15 @@ function Task({ task, columnName, index }) {
                 onClick={(e) => {
                     if (!isDragging) openTaskModal(task.id)
                 }}
+                onKeyDown={(e) => {
+                    if ((e.key === 'Enter' || e.key === ' ') && !isDragging) {
+                        e.preventDefault()
+                        openTaskModal(task.id)
+                    }
+                }}
+                tabIndex='0'
+                role='button'
+                aria-label={`${task.title}${hasSubtasks ? `, ${completedSubtasks} of ${totalSubtasks} subtasks completed` : ''}`}
                 data-task-id={task.id}
             >
                 <span className='task__card--title'>{task.title}</span>

@@ -2,6 +2,7 @@ import { useState, useContext, useEffect, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import CrossIcon from '../assets/icon-cross.svg?react'
 import { BoardContext } from '../App'
+import useFocusTrap from '../hooks/useFocusTrap'
 
 function AddBoard() {
   const { darkMode, closeAddBoardModal, addNewBoard, boards } = useContext(BoardContext)
@@ -15,7 +16,10 @@ function AddBoard() {
   const newColumnInputRef = useRef(null)
   const shouldFocusNewColumn = useRef(false)
   const nameInputRef = useRef(null)
+  const modalRef = useRef(null)
   const mouseDownOnBackdrop = useRef(false)
+
+  useFocusTrap(modalRef, true, closeAddBoardModal)
 
   useEffect(() => {
     if (nameError) setNameError('')
@@ -169,8 +173,15 @@ function AddBoard() {
 
   return (
     <div className="task-modal" onClick={handleBackdropClick} onMouseDown={handleMouseDown}>
-      <div className={`task-modal__content ${darkMode ? 'dark' : ''}`} onClick={e => e.stopPropagation()}>
-        <h2 className="task-modal__content--header--title">Add New Board</h2>
+      <div 
+        ref={modalRef}
+        className={`task-modal__content ${darkMode ? 'dark' : ''}`} 
+        onClick={e => e.stopPropagation()}
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby='add-board-title'
+      >
+        <h2 id='add-board-title' className="task-modal__content--header--title">Add New Board</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Name</label>

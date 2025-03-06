@@ -15,6 +15,12 @@ function Sidebar() {
             <div 
                 key={`board-${board.id}`} 
                 className={`sidebar__boards--board ${darkMode ? 'dark' : ''} ${board.id === currentBoard.id ? 'active' : ''}`}
+                tabIndex='0'
+                onKeyDown={(e) => {
+                    if ((e.key === 'Enter' || e.key === ' ')) {
+                        setCurrentBoard(board)
+                    }
+                }}
                 onClick={() => setCurrentBoard(board)}
             >
                 <BoardIcon className='sidebar__boards--board--icon' alt='Board icon' />
@@ -32,13 +38,31 @@ function Sidebar() {
                 <div className='sidebar__boards'>
                     <span className='sidebar__boards--all-boards'>All Boards ({boardCount})</span>
                     {boardItems}
-                    <div className={`sidebar__boards--board new ${darkMode ? 'dark' : ''}`} onClick={openAddBoardModal}>
+                    <div 
+                        className={`sidebar__boards--board new ${darkMode ? 'dark' : ''}`}
+                        tabIndex='0'
+                        onKeyDown={(e) => {
+                            if ((e.key === 'Enter' || e.key === ' ')) {
+                                openAddBoardModal()
+                            }
+                        }}
+                        onClick={openAddBoardModal}
+                    >
                         <BoardIcon className='sidebar__boards--board--icon' alt='Board icon' />
                         <span className='sidebar__boards--board--name'>+ Create New Board</span>
                     </div>
                 </div>
                 <div>
-                    <div className={`sidebar__theme ${darkMode ? 'dark' : ''}`} onClick={() => toggleDarkMode()}>
+                    <div 
+                        className={`sidebar__theme ${darkMode ? 'dark' : ''}`} 
+                        tabIndex='0'
+                        onKeyDown={(e) => {
+                            if ((e.key === 'Enter' || e.key === ' ')) {
+                                toggleDarkMode()
+                            }
+                        }}
+                        onClick={() => toggleDarkMode()}
+                    >
                         <LightThemeIcon alt='Light theme icon' />
                         <input type='checkbox' checked={darkMode} />
                         <span className='sidebar__theme--slider'></span>
