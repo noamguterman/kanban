@@ -30,7 +30,7 @@ function EditBoard() {
   const modalRef = useRef(null)
   const mouseDownOnBackdrop = useRef(false)
 
-  useFocusTrap(modalRef, true, closeEditBoardModal)
+  useFocusTrap(modalRef, true, closeEditBoardModal, false)
 
   useEffect(() => {
     if (nameError) setNameError('')
@@ -187,6 +187,7 @@ function EditBoard() {
         role='dialog'
         aria-modal='true'
         aria-labelledby='edit-board-title'
+        tabIndex={-1}
       >
         <h2 id='edit-board-title' className="task-modal__content--header--title">Edit Board</h2>
         <form onSubmit={handleSubmit}>

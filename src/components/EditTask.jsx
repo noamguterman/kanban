@@ -36,7 +36,7 @@ function EditTask() {
   const modalRef = useRef(null)
   const mouseDownOnBackdrop = useRef(false)
 
-  useFocusTrap(modalRef, true, closeEditTaskModal)
+  useFocusTrap(modalRef, true, closeEditTaskModal, false)
 
   useEffect(() => {
     if (focusNewSubtask.current && newSubtaskInputRef.current) {
@@ -143,6 +143,7 @@ function EditTask() {
         role='dialog'
         aria-modal='true'
         aria-labelledby='edit-task-title'
+        tabIndex={-1}
       >
         <h2 id='edit-task-title' className="task-modal__content--header--title">Edit Task</h2>
         <form onSubmit={handleSubmit}>
