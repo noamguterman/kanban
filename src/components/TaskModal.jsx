@@ -49,6 +49,15 @@ function TaskModal({ task, hasSubtasks, totalSubtasks, completedSubtasks }) {
     }
   }, [])
 
+  function handleModalKeyDown(e) {
+    if (e.key === 'Escape' && isTaskMenuOpen) {
+      // Close only the task menu if it's open
+      handleTaskMenuClick();
+      e.stopPropagation()
+      e.preventDefault()
+    }
+  }
+
   function handleMouseDown(e) {
     // Check if the mousedown happened on backdrop (not on modal content)
     mouseDownOnBackdrop.current = e.target === e.currentTarget
@@ -78,6 +87,7 @@ function TaskModal({ task, hasSubtasks, totalSubtasks, completedSubtasks }) {
         ref={modalRef}
         className={`task-modal__content ${darkMode ? 'dark' : ''}`}
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={handleModalKeyDown}
         role='dialog'
         aria-modal='true'
         aria-labelledby='task-title'

@@ -33,6 +33,20 @@ function Header() {
         }
     }, [isHeaderMenuOpen, handleHeaderMenuClick])
 
+    useEffect(() => {
+        function handleEscape(e) {
+          if (e.key === 'Escape') {
+            handleHeaderMenuClick()
+          }
+        }
+        if (isHeaderMenuOpen) {
+          document.addEventListener('keydown', handleEscape)
+        }
+        return () => {
+          document.removeEventListener('keydown', handleEscape)
+        }
+      }, [isHeaderMenuOpen, handleHeaderMenuClick])
+
     return (
         <header className={`header ${!currentBoard.name && sidebarOpen ? 'hidden' : ''} ${darkMode ? 'dark' : ''}`}>
             <div className='header__left'>
