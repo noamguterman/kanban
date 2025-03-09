@@ -30,8 +30,10 @@ function useFocusTrap(ref, isActive = true, onEscape = null, focusFirstInput = t
       if (focusFirstInput && focusableElements.length > 0) {
         focusableElements[0].focus();
       } else {
-        // Focus the modal container itself
-        ref.current.focus();
+        // Only focus the modal container if nothing inside it is already focused.
+        if (!ref.current.contains(document.activeElement)) {
+          ref.current.focus();
+        }
       }
     }, 50);
     
