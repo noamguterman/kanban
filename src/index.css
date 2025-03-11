@@ -645,7 +645,7 @@ body .app.dark {
   opacity: 1;
   transition: opacity 0.5s ease;
 }
-.column-ghost:focus {
+.column-ghost:focus-visible {
   opacity: 1;
 }
 .column-ghost.dark {
@@ -671,7 +671,7 @@ body .app.dark {
   opacity: 1;
   transition: opacity 0.5s ease;
 }
-.task-ghost:focus {
+.task-ghost:focus-visible {
   opacity: 1;
 }
 .task-ghost.dark {
