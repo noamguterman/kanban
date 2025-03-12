@@ -38,7 +38,7 @@ const Main = forwardRef((props, ref) => {
                     <>
                         {columns}
                         <button 
-                            className={`column-ghost ${columns.length >= 5 ? 'hidden' : ''} ${darkMode ? 'dark' : ''}`}
+                            className={`column-ghost ${darkMode ? 'dark' : ''}`}
                             onClick={() => openEditBoardModal(true)}
                         >
                             + New Column

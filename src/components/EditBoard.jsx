@@ -70,7 +70,6 @@ function EditBoard() {
   }
 
   function handleAddColumn() {
-    if (columns.length >= 5) return
     const colorOptions = ['color1', 'color2', 'color3', 'color4', 'color5']
     const colorIndex = columns.length % colorOptions.length
 
@@ -242,9 +241,8 @@ function EditBoard() {
               type="button"
               className={`btn sm secondary ${darkMode ? 'dark' : ''}`}
               onClick={handleAddColumn}
-              disabled={columns.length >= 5}
             >
-              {columns.length >= 5 ? 'Maximum Columns Reached' : '+ Add New Column'}
+              + Add New Column
             </button>
           </div>
           <button type="submit" className="btn sm primary">
