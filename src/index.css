@@ -43,6 +43,7 @@
   --heading-s-kerning: 2.4px;
   --body-l: 500 .81rem/1.44rem "Plus Jakarta Sans", sans-serif;
   --body-m: 700 .75rem/.94rem "Plus Jakarta Sans", sans-serif;
+  --sidebar-width: 20rem;
 
   scrollbar-color: var(--light-grey) var(--bg-light);
   background-color: var(--bg-light);
@@ -162,7 +163,7 @@ body .app.dark {
   height: 100dvh;
 }
 .app.sidebar-open {
-  padding-left: 20rem;
+  padding-left: var(--sidebar-width);
 }
 
 .header {
@@ -183,7 +184,7 @@ body .app.dark {
 }
 
 .app.sidebar-open .header {
-  padding-left: 20rem;
+  padding-left: var(--sidebar-width);
 }
 .header.dark {
   background-color: var(--dark-grey);
@@ -313,7 +314,7 @@ body .app.dark {
   left: 0;
   bottom: 0;
   background-color: var(--white);
-  width: 20rem;
+  width: var(--sidebar-width);
   border-right: 1px solid var(--lines-light);
   z-index: 2;
   overflow-y: auto;
@@ -565,6 +566,7 @@ body .app.dark {
   font: var(--heading-l);
   color: var(--medium-grey-light);
   margin: 0;
+  text-align: center;
 }
 .app.dark .empty-board__text {
   color: var(--medium-grey-dark);
@@ -1028,6 +1030,33 @@ textarea::placeholder {
 .app.dark input::placeholder,
 .app.dark textarea::placeholder {
   color: var(--medium-grey-dark);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 15rem;
+  }
+  .sidebar__boards--board {
+    padding-left: 1rem;
+  }
+  .sidebar__boards--all-boards {
+    padding-left: 1rem;
+  }
+  .header h1 {
+    font-size: 1.25rem;
+  }
+  .header button {
+    transform: scale(0.9);
+  }
+  button.header__menu {
+    padding: 0;
+  }
+}
+
+@media (max-width: 375px) {
+  .main {
+    background-color: #2a6272;
+  }
 }
 
 @keyframes slideIn {
