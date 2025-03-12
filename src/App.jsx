@@ -89,7 +89,6 @@ function App() {
       mainRef.current.scrollTo({
         top: 0,
         left: 0,
-        behavior: prefersReducedMotion ? 'smooth' : 'auto'
       })
       window.scrollTo(0, 0)
     }
