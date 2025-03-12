@@ -78,6 +78,7 @@ function EditBoard() {
       { id: uuidv4(), name: '', color: colorOptions[colorIndex], tasks: [] }
     ])
     shouldFocusNewColumn.current = true
+    modalRef.current.scrollTop = modalRef.current.scrollHeight
   }
 
   function handleColorChange(id) {

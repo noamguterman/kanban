@@ -74,6 +74,7 @@ function AddTask() {
     function handleAddSubtask() {
         setSubtasks([...subtasks, { id: uuidv4(), title: '', isCompleted: false }])
         focusNewSubtask.current = true
+        modalRef.current.scrollTop = modalRef.current.scrollHeight
     }
 
     function handleRemoveSubtask(id) {

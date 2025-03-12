@@ -68,6 +68,7 @@ function AddBoard() {
       }
     ])
     shouldFocusNewColumn.current = true
+    modalRef.current.scrollTop = modalRef.current.scrollHeight
   }
 
   function handleColorChange(id) {
