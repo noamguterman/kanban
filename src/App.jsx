@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useCallback, useRef } from 'react'
+import { useState, useEffect, createContext, useCallback, useRef, useLayoutEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -55,6 +55,8 @@ function App() {
   const [editBoardShouldAddColumn, setEditBoardShouldAddColumn] = useState(false)
   const [targetColumnName, setTargetColumnName] = useState(null)
   const manualBoardSelection = useRef(false)
+  const mainRef = useRef(null)
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches
 
   useEffect(() => {
     // If we did a manual selection, reset the flag and skip this effect
@@ -81,6 +83,17 @@ function App() {
       document.documentElement.classList.remove('dark')
     }
   }, [darkMode])
+
+  useLayoutEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: prefersReducedMotion ? 'smooth' : 'auto'
+      })
+      window.scrollTo(0, 0)
+    }
+  }, [currentBoard])
 
   function openAddTaskModal(columnName = null) {
     if (columnName) {
@@ -554,7 +567,7 @@ function App() {
             ? <Sidebar /> 
             : <SidebarMini />
           }
-          <Main />
+          <Main ref={mainRef} />
           {isAddTaskModalOpen && <AddTask />}
           {isAddBoardModalOpen && <AddBoard />}
           {isEditBoardModalOpen && <EditBoard />}

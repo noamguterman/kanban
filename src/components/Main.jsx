@@ -1,8 +1,8 @@
 import Column from './Column'
-import { useContext } from 'react'
+import { useContext, forwardRef } from 'react'
 import { BoardContext } from '../App'
 
-function Main() {
+const Main = forwardRef((props, ref) => {
     const { currentBoard, openEditBoardModal, openAddBoardModal, darkMode, boards } = useContext(BoardContext)
     const columns = currentBoard.columns.map(column => {
         return (
@@ -32,7 +32,7 @@ function Main() {
             </div>
         </div>
     const main = 
-        <div className='main'>
+        <div className='main' ref={ref}>
             {columns.length 
                 ? 
                     <>
@@ -51,6 +51,6 @@ function Main() {
     return (
         boards.length ? main : noBoardsCta
     )
-}
+})
 
 export default Main
