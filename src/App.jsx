@@ -56,7 +56,6 @@ function App() {
   const [targetColumnName, setTargetColumnName] = useState(null)
   const manualBoardSelection = useRef(false)
   const mainRef = useRef(null)
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches
 
   useEffect(() => {
     // If we did a manual selection, reset the flag and skip this effect
