@@ -1,82 +1,74 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react';
 
-/**
- * Custom hook to trap focus within a modal
- * @param {Object} ref - React ref to the modal container element
- * @param {boolean} isActive - Whether the modal is active
- * @param {Function} onEscape - Function to call when Escape is pressed
- */
 function useFocusTrap(ref, isActive = true, onEscape = null, focusFirstInput = true) {
   const previousFocus = useRef(null);
+  const hasAutoFocused = useRef(false);
+  const onEscapeRef = useRef(onEscape);
+  onEscapeRef.current = onEscape;
 
   useEffect(() => {
     if (!isActive || !ref.current) return;
-    
-    // Store the element that had focus before modal opened
+
+    // Store the element that was focused before the modal opened.
     previousFocus.current = document.activeElement;
-    
-    // Find all focusable elements
+
     const focusableElements = ref.current.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
-    
-    // Ensure modal container is focusable if we're not focusing inputs
+
+    // Ensure modal container is focusable if we're not auto-focusing an inner element.
     if (!focusFirstInput && ref.current.tabIndex === undefined) {
       ref.current.tabIndex = -1;
     }
-    
-    // Focus modal container or first element
-    setTimeout(() => {
-      if (focusFirstInput && focusableElements.length > 0) {
-        focusableElements[0].focus();
-      } else {
-        // Only focus the modal container if nothing inside it is already focused.
+
+    // Run auto‑focus logic only once on mount.
+    if (!hasAutoFocused.current) {
+      setTimeout(() => {
         if (!ref.current.contains(document.activeElement)) {
-          ref.current.focus();
+          if (focusFirstInput && focusableElements.length > 0) {
+            focusableElements[0].focus();
+          } else {
+            ref.current.focus();
+          }
         }
-      }
-    }, 50);
-    
-    // Keyboard navigation handler
+        hasAutoFocused.current = true;
+      }, 50);
+    }
+
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && onEscape) {
-        onEscape();
+      if (e.key === 'Escape' && onEscapeRef.current) {
+        onEscapeRef.current();
         return;
       }
-      
       if (e.key === 'Tab') {
-        // If no focusable elements, prevent tab navigation
         if (focusableElements.length === 0) {
           e.preventDefault();
           return;
         }
-        
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
-        
-        // Shift+Tab on first element -> go to last element
+
         if (e.shiftKey && (document.activeElement === firstElement || document.activeElement === ref.current)) {
           e.preventDefault();
           lastElement.focus();
-        } 
-        // Tab on last element -> go to first element
-        else if (!e.shiftKey && document.activeElement === lastElement) {
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
           e.preventDefault();
           firstElement.focus();
         }
       }
     };
-    
+
     document.addEventListener('keydown', handleKeyDown);
-    
+
+    // The cleanup runs only when the modal is unmounted.
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      // Return focus to previous element when modal closes
+      // Return focus to the element that had it before the modal opened.
       if (previousFocus.current) {
         previousFocus.current.focus();
       }
     };
-  }, [isActive, onEscape, ref, focusFirstInput]);
+  }, []); // empty dependency array so the effect only runs once on mount.
 }
 
-export default useFocusTrap
+export default useFocusTrap;

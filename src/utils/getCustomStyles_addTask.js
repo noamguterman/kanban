@@ -15,18 +15,18 @@ export const getCustomStyles = (darkMode) => ({
     }),
     option: (styles, { isSelected, isFocused }) => ({
         ...styles,
-        backgroundColor: isSelected 
-            ? 'inherit'
-            : isFocused 
-                ? 'var(--purple)'
+        backgroundColor: isFocused 
+            ? 'var(--purple)'
+            : isSelected 
+                ? 'inherit'
                 : darkMode 
                     ? 'var(--bg-dark)'
                     : 'var(--white)',
-                    color: isSelected 
-                    ? 'var(--medium-grey)' 
-                    : isFocused
-                        ? 'var(--white)'
-                        : 'var(--medium-grey)',
+        color: isFocused 
+            ? 'var(--white)'
+            : isSelected 
+                ? 'var(--medium-grey)'
+                : 'var(--medium-grey)', 
         padding: '0.5rem 1.2rem',
         cursor: 'pointer',
         font: 'var(--body-l)',
