@@ -179,6 +179,7 @@ body .app.dark {
   right: 0;
   z-index: 2;
   min-height: 5.9rem;
+  min-width: 0 !important;
 }
 
 .app.sidebar-open .header {
@@ -191,6 +192,7 @@ body .app.dark {
 .header__left {
   display: flex;
   align-items: center;
+  min-width: 0 !important;
 }
 .header__right {
   display: flex;
@@ -216,8 +218,13 @@ body .app.dark {
   background-color: var(--lines-dark);
 }
 .header h1 {
-  font: var(--heading-xl);
+  flex: 1 1 auto;
+  min-width: 0 !important;
   margin-left: 2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font: var(--heading-xl);
 }
 .header .btn {
   min-width: 12.4rem;

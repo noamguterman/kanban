@@ -56,6 +56,7 @@ function App() {
   const [targetColumnName, setTargetColumnName] = useState(null)
   const manualBoardSelection = useRef(false)
   const mainRef = useRef(null)
+  const prevColumnsLength = useRef(currentBoard ? currentBoard.columns.length : 0)
 
   useEffect(() => {
     // If we did a manual selection, reset the flag and skip this effect
@@ -83,6 +84,18 @@ function App() {
     }
   }, [darkMode])
 
+  useEffect(() => {
+    // When currentBoard's column count increases, scroll up.
+    const currentColumnsLength = currentBoard ? currentBoard.columns.length : 0
+    if(currentColumnsLength > prevColumnsLength.current) {
+      if(mainRef.current) {
+        mainRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      }
+    }
+    // Update previous column count
+    prevColumnsLength.current = currentColumnsLength;
+  }, [currentBoard?.columns.length]);
+
   useLayoutEffect(() => {
     if (mainRef.current) {
       mainRef.current.scrollTo({
@@ -91,7 +104,7 @@ function App() {
       })
       window.scrollTo(0, 0)
     }
-  }, [currentBoard])
+  }, [currentBoard?.id])
 
   function openAddTaskModal(columnName = null) {
     if (columnName) {

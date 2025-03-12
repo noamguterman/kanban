@@ -216,7 +216,7 @@ function AddBoard() {
                     type="text"
                     placeholder="e.g. Todo"
                     value={column.name}
-                    maxLength={45}
+                    maxLength={43}
                     onChange={(e) => handleColumnNameChange(column.id, e.target.value)}
                     className={`${darkMode ? 'dark' : ''} ${columnErrors[column.id] ? 'error' : ''}`}
                     ref={index === columns.length - 1 ? newColumnInputRef : null}
