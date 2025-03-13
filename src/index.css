@@ -74,8 +74,7 @@
 }
 
 html {
-  overflow-y: hidden;
-  overflow-x: auto;
+  overflow: hidden;
 }
 
 body {
@@ -168,7 +167,7 @@ body .app.dark {
 
 .header {
   position: fixed;
-  width: 100%;
+  width: 100dvw;
   background-color: var(--white);
   display: flex;
   justify-content: space-between;
@@ -178,9 +177,9 @@ body .app.dark {
   left: 0;
   gap: 1rem;
   right: 0;
-  z-index: 2;
   min-height: 5.9rem;
   min-width: 0 !important;
+  z-index: 1;
 }
 
 .app.sidebar-open .header {
@@ -546,11 +545,19 @@ body .app.dark {
 
 .main {
   display: flex;
+  height: 100dvh;
+  width: 100dvw;
+  min-width: 0;
   padding: 1.5rem;
   padding-top: 7.5rem;
-  height: 100dvh;
+  padding-right: 1.5rem;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
+  position: fixed;
+  scrollbar-width: none;
+}
+.app.sidebar-open .main {
+  padding-right: calc(var(--sidebar-width) + 1.5rem);
 }
 
 .empty-board {
@@ -646,6 +653,7 @@ body .app.dark {
   border-radius: 6px;
   height: 100dvh;
   width: 17.5rem;
+  min-width: 17.5rem;
   font: var(--heading-xl);
   color: var(--purple);
   cursor: pointer;
@@ -1053,7 +1061,7 @@ textarea::placeholder {
   }
 }
 
-@media (max-width: 375px) {
+@media (max-width: 600px) {
   .main {
     background-color: #2a6272;
   }
@@ -1079,14 +1087,4 @@ textarea::placeholder {
     opacity: 1;
     transform: scale(1);
   }
-}
-
-
-
-
-
-
-
-* {
-  /* border: 1px solid red; */
 }
