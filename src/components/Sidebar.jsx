@@ -52,7 +52,7 @@ function Sidebar() {
                         <span className='sidebar__boards--board--name'>+ Create New Board</span>
                     </div>
                 </div>
-                <div>
+                <div className='sidebar__settings'>
                     <div 
                         className={`sidebar__theme ${darkMode ? 'dark' : ''}`} 
                         tabIndex='0'
