@@ -316,7 +316,7 @@ body .app.dark {
   background-color: var(--white);
   width: var(--sidebar-width);
   border-right: 1px solid var(--lines-light);
-  z-index: 0;
+  z-index: 1;
   overflow-y: auto;
 }
 .sidebar.dark {
