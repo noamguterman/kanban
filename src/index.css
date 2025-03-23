@@ -1082,8 +1082,12 @@ textarea::placeholder {
   }
   .header button.btn.lg.primary.alt {
     display: block;
-    border-radius: 50%;
-    min-width: 3rem;
+    min-width: 4rem;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: .4rem;
   }
 }
 
