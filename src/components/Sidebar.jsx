@@ -4,12 +4,14 @@ import LogoDark from '../assets/logo-dark.svg?react'
 import LightThemeIcon from '../assets/icon-light-theme.svg?react'
 import DarkThemeIcon from '../assets/icon-dark-theme.svg?react'
 import HideSidebarIcon from '../assets/icon-hide-sidebar.svg?react'
-import { useContext } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { BoardContext } from '../App'
 
 function Sidebar() {
     const { darkMode, boards, currentBoard, setCurrentBoard, toggleDarkMode, toggleSidebar, openAddBoardModal } = useContext(BoardContext)
     const boardCount = boards.length
+    const boardListRef = useRef(null)
+
     const boardItems = boards.map(board => {
         return (
             <div 
@@ -29,8 +31,15 @@ function Sidebar() {
         )
     })
 
+    useEffect(() => {
+        // Scroll the container to the bottom when boards change
+        if (boardListRef.current) {
+          boardListRef.current.scrollTop = boardListRef.current.scrollHeight
+        }
+      }, [boards])
+
     return (
-        <div className={`sidebar ${darkMode ? 'dark' : ''}`}>
+        <div className={`sidebar ${darkMode ? 'dark' : ''}`} ref={boardListRef}>
             <div className='sidebar__logo'>
                 {darkMode ? <LogoLight alt='Logo' /> : <LogoDark alt='Logo' />}
             </div>
