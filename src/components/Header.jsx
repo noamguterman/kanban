@@ -1,6 +1,7 @@
 import MenuIcon from '../assets/icon-vertical-ellipsis.svg?react'
 import LogoLight from '../assets/logo-light.svg?react'
 import LogoDark from '../assets/logo-dark.svg?react'
+import LogoMobile from '../assets/logo-mobile.svg?react'
 import { useContext, useRef, useEffect } from 'react'
 import { BoardContext } from '../App'
 
@@ -54,6 +55,7 @@ function Header() {
                     (<div className={`header__logo ${!currentBoard.name ? 'empty' : ''} ${darkMode ? 'dark' : ''}`}>
                         {darkMode ? <LogoLight alt='Logo' /> : <LogoDark alt='Logo' />}
                     </div>)}
+                <LogoMobile className='header__logo--mobile' alt='Logo' />
                 <h1>{currentBoard.name}</h1>
             </div>
             <div className='header__right'>
