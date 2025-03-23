@@ -1,4 +1,5 @@
 import { useContext, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useDrag, useDrop } from 'react-dnd'
 import { BoardContext } from '../App'
 import TaskModal from './TaskModal'
@@ -9,6 +10,7 @@ function Task({ task, columnName, index }) {
     const totalSubtasks = task.subtasks?.length
     const completedSubtasks = task.subtasks?.filter(subtask => subtask.isCompleted).length
     const isThisTaskModalOpen = isTaskModalOpen && activeTaskId === task.id
+    const appEl = document.querySelector('.app')
 
     const ref = useRef(null)
 
@@ -145,12 +147,15 @@ function Task({ task, columnName, index }) {
             </div>
 
             {isThisTaskModalOpen && (
-                <TaskModal 
-                    task={task}
-                    hasSubtasks={hasSubtasks} 
-                    totalSubtasks={totalSubtasks} 
-                    completedSubtasks={completedSubtasks}
-                />
+                createPortal(
+                    <TaskModal 
+                        task={task}
+                        hasSubtasks={hasSubtasks} 
+                        totalSubtasks={totalSubtasks} 
+                        completedSubtasks={completedSubtasks}
+                    />,
+                    appEl
+                )
             )}
         </>
     )
