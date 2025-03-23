@@ -63,6 +63,11 @@ function Header() {
                         + Add New Task
                 </button>
                 <button 
+                    className={`btn lg primary alt ${currentBoard.columns.length === 0 ? 'hidden' : ''}`}
+                    onClick={() => openAddTaskModal()}>
+                        +
+                </button>
+                <button 
                     className={`header__menu ${!currentBoard.name ? 'hidden' : ''}`} 
                     onClick={handleHeaderMenuClick}
                     ref={buttonRef}

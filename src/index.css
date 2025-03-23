@@ -1046,6 +1046,10 @@ textarea::placeholder {
   color: var(--medium-grey-dark);
 }
 
+.header button.btn.lg.primary.alt {
+  display: none;
+}
+
 @media (max-width: 820px) {
   :root {
     --sidebar-width: 15rem;
@@ -1072,9 +1076,14 @@ textarea::placeholder {
   }
 }
 
-@media (max-width: 700px) {
-  .main {
-    background-color: #4E5A6A;
+@media (max-width: 660px) {
+  .header button.btn.lg.primary {
+    display: none;
+  }
+  .header button.btn.lg.primary.alt {
+    display: block;
+    border-radius: 50%;
+    min-width: 3rem;
   }
 }
 
