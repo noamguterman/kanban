@@ -227,8 +227,10 @@ body .app.dark {
   text-overflow: ellipsis;
   font: var(--heading-xl);
 }
-.header .btn {
-  min-width: 12.4rem;
+.header button.btn.lg.primary {
+  min-width: 10.5rem;
+  padding: 0;
+  margin: 0;
 }
 .header__menu {
   position: relative;
@@ -393,6 +395,7 @@ body .app.dark {
 }
 .sidebar__boards--board--name {
   color: var(--medium-grey-light);
+  padding-right: 1rem;
 }
 .app.dark .sidebar__boards--board--name {
   color: var(--medium-grey-dark);
@@ -1053,11 +1056,16 @@ textarea::placeholder {
   .sidebar__boards--all-boards {
     padding-left: 1rem;
   }
+  .sidebar__boards--board--name {
+    font-size: .92rem;
+    padding-right: .5rem;
+  }
   .header h1 {
     font-size: 1.25rem;
   }
-  .header button {
+  .header button.btn.lg.primary {
     transform: scale(0.9);
+    min-width: 10rem;
   }
   button.header__menu {
     padding: 0;
