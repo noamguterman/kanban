@@ -1054,6 +1054,14 @@ textarea::placeholder {
   display: none;
 }
 
+.header__left--mobile {
+  display: none;
+}
+
+.header__chevron {
+  display: none;
+}
+
 @media (max-width: 820px) {
   :root {
     --sidebar-width: 15rem;
@@ -1119,7 +1127,6 @@ textarea::placeholder {
   .header h1 {
     padding: 0;
     margin: 0;
-    cursor: pointer;
   }
   .sidebar {
     left: 50%;
@@ -1155,6 +1162,51 @@ textarea::placeholder {
   }
   .task-modal__content {
     width: 90%;
+  }
+  .header__left--mobile {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .header__left--mobile:hover .header__chevron {
+    color: var(--purple-hover);
+  }
+  .header__left--mobile:active {
+    transform: scale(0.98);
+  }
+  .header__chevron {
+    display: block;
+    color: var(--purple);
+    transform: scale(1.5);
+    margin-top: 2px;
+    transition: transform 0.1s ease;
+  }
+  .header__chevron.rotated {
+    transform: scale(1.5) rotate(180deg);
+  }
+  .header .h1--desktop {
+    display: none;
+  }
+  .sidebar-mini {
+    display: none;
+  }
+  .header__logo {
+    display: none;
+  }
+  .header {
+    padding-left: 0;
+  }
+  .task-modal__content.delete-modal {
+    width: 80%;
+    padding: 1.5rem;
+  }
+  .task-modal__content.delete-modal .delete-actions {
+    justify-content: center;
+  }
+  .task-modal__content.delete-modal button {
+    max-width: 13rem;
+    padding: 0 1rem;
   }
 }
 

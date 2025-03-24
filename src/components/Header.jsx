@@ -2,11 +2,12 @@ import MenuIcon from '../assets/icon-vertical-ellipsis.svg?react'
 import LogoLight from '../assets/logo-light.svg?react'
 import LogoDark from '../assets/logo-dark.svg?react'
 import LogoMobile from '../assets/logo-mobile.svg?react'
+import Chevron from '../assets/icon-chevron-down.svg?react'
 import { useContext, useRef, useEffect } from 'react'
 import { BoardContext } from '../App'
 
 function Header() {
-    const { darkMode, currentBoard, sidebarOpen, openAddTaskModal, handleHeaderMenuClick, isHeaderMenuOpen, openEditBoardModal, openDeleteBoardModal } = useContext(BoardContext)
+    const { darkMode, currentBoard, sidebarOpen, toggleSidebar, openAddTaskModal, handleHeaderMenuClick, isHeaderMenuOpen, openEditBoardModal, openDeleteBoardModal } = useContext(BoardContext)
     const menuRef = useRef(null)
     const buttonRef = useRef(null)
 
@@ -56,7 +57,11 @@ function Header() {
                         {darkMode ? <LogoLight alt='Logo' /> : <LogoDark alt='Logo' />}
                     </div>)}
                 <LogoMobile className='header__logo--mobile' alt='Logo' />
-                <h1>{currentBoard.name}</h1>
+                <h1 className='h1--desktop'>{currentBoard.name}</h1>
+                <div className='header__left--mobile' onClick={toggleSidebar}>
+                    <h1>{currentBoard.name}</h1>
+                    <Chevron className={`header__chevron ${sidebarOpen ? 'rotated' : ''}`} alt='Chevron' />
+                </div>
             </div>
             <div className='header__right'>
                 <button 
