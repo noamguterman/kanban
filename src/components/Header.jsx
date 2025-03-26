@@ -12,28 +12,38 @@ function Header() {
     const buttonRef = useRef(null)
 
     useEffect(() => {
-        // Function to handle clicks outside menu
         function handleOutsideClick(e) {
-            // If menu is open and click is outside both the menu and the button
             if (isHeaderMenuOpen && 
                 menuRef.current && 
                 !menuRef.current.contains(e.target) && 
                 buttonRef.current && 
-                !buttonRef.current.contains(e.target)) {
+                !buttonRef.current.contains(e.target)
+            ) {
                 handleHeaderMenuClick()
+            }
+
+            if (sidebarOpen) {
+                const mobileSidebar = document.querySelector('.header__left--mobile')
+                if (mobileSidebar && window.getComputedStyle(mobileSidebar).display !== 'none') {
+                    if (mobileSidebar.contains(e.target)) {
+                        return
+                    }
+                    const sidebar = document.querySelector('.sidebar');
+                    if (sidebar && !sidebar.contains(e.target)) {
+                        toggleSidebar()
+                    }
+                }
             }
         }
         
-        // Add event listener when menu is open
-        if (isHeaderMenuOpen) {
+        if (isHeaderMenuOpen || sidebarOpen) {
             document.addEventListener('mousedown', handleOutsideClick)
         }
         
-        // Clean up
         return () => {
             document.removeEventListener('mousedown', handleOutsideClick)
         }
-    }, [isHeaderMenuOpen, handleHeaderMenuClick])
+    }, [isHeaderMenuOpen, sidebarOpen, handleHeaderMenuClick, toggleSidebar])
 
     useEffect(() => {
         function handleEscape(e) {
