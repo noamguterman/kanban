@@ -575,7 +575,12 @@ function App() {
         <div className={`app ${darkMode ? 'dark' : ''} ${sidebarOpen ? 'sidebar-open' : ''}`}>
           <Header />
           {sidebarOpen 
-            ? <Sidebar /> 
+            ? (
+              <>
+                <div className='sidebar-mobile-overlay'></div>
+                <Sidebar />
+              </>
+            ) 
             : <SidebarMini />
           }
           <Main ref={mainRef} />
