@@ -41,7 +41,7 @@ function App() {
   })
   const [boards, setBoards] = useState(addIdsToData(demoData.boards))
   const [currentBoard, setCurrentBoard] = useState(boards[0])
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 600)
   const [activeTaskId, setActiveTaskId] = useState(null)
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
