@@ -23,7 +23,10 @@ function Sidebar() {
                         setCurrentBoard(board)
                     }
                 }}
-                onClick={() => setCurrentBoard(board)}
+                onClick={() => {
+                    setCurrentBoard(board)
+                    if (window.innerWidth < 600) toggleSidebar()
+                }}
             >
                 <BoardIcon className='sidebar__boards--board--icon' alt='Board icon' />
                 <span className='sidebar__boards--board--name'>{board.name}</span>
