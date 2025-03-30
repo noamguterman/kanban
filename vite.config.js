@@ -12,5 +12,6 @@ export default defineConfig({
         svgo: false,
       }
     })
-  ]
+  ],
+  base: '/kanban/',
 })
