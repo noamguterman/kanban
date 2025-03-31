@@ -37,11 +37,25 @@ export const BoardContext = createContext()
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+    const systemThemePref = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+    const localStorageThemePref = localStorage.getItem('kanban-dark-mode')
+    return localStorageThemePref ? JSON.parse(localStorageThemePref) : systemThemePref
   })
-  const [boards, setBoards] = useState(addIdsToData(demoData.boards))
-  const [currentBoard, setCurrentBoard] = useState(boards[0])
-  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 600)
+  const [boards, setBoards] = useState(() => {
+    const localStorageBoards = localStorage.getItem('kanban-boards')
+    const demoBoards = addIdsToData(demoData.boards)
+    return localStorageBoards ? JSON.parse(localStorageBoards) : demoBoards
+  })
+  const [currentBoard, setCurrentBoard] = useState(() => {
+    const localStorageCurrentBoard = localStorage.getItem('kanban-current-board')
+    const defaultBoard = boards[0] || null
+    return localStorageCurrentBoard ? JSON.parse(localStorageCurrentBoard) : defaultBoard
+  })
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    const isMobileResolution = window.innerWidth >= 600
+    const localStorageSidebarOpen = localStorage.getItem('kanban-sidebar-open')
+    return localStorageSidebarOpen ? JSON.parse(localStorageSidebarOpen) : isMobileResolution
+  })
   const [activeTaskId, setActiveTaskId] = useState(null)
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
@@ -57,6 +71,13 @@ function App() {
   const manualBoardSelection = useRef(false)
   const mainRef = useRef(null)
   const prevColumnsLength = useRef(currentBoard ? currentBoard.columns.length : 0)
+
+  useEffect(() => {
+    localStorage.setItem('kanban-boards', JSON.stringify(boards))
+    localStorage.setItem('kanban-dark-mode', JSON.stringify(darkMode))
+    localStorage.setItem('kanban-current-board', JSON.stringify(currentBoard))
+    localStorage.setItem('kanban-sidebar-open', JSON.stringify(sidebarOpen))
+  }, [boards, darkMode, currentBoard, sidebarOpen])
 
   useEffect(() => {
     // If we did a manual selection, reset the flag and skip this effect
